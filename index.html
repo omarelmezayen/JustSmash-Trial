@@ -1,0 +1,1966 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>J.Smash · No Talk. Just Smash.</title>
+<meta name="description" content="J.Smash — double smashed burgers, loaded fries and crispy chicken. No talk. Just smash.">
+<meta name="theme-color" content="#990308">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Montserrat:wght@600..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/iconic-photo.png">
+<style>
+:root{
+  --red-3:#820107;
+  --btn:#8f0408; --btn-hi:#a8060c;
+  --logo:#980c13;
+  --cream:#fcf1e3; --cream-2:#fef3e4; --pre:#fdf3e6; --sand:#f7e9dc;
+  --ink:#1d1b1c; --muted:#8a6a5e;
+  --badge-ink:#8f0a0c;
+  --gold:#efbc64;
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --ease-io:cubic-bezier(.65,0,.25,1);
+  --move:.95s;
+}
+@property --gc{syntax:'<color>';inherits:false;initial-value:rgba(255,128,48,.34)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--red-3)}
+html.is-preloading{overflow:hidden}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:none;-webkit-user-drag:none;user-select:none}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid #ffd27a;outline-offset:3px;border-radius:6px}
+
+/* ───────── Preloader ───────── */
+.pre{position:fixed;inset:0;z-index:100;background:var(--pre);will-change:transform}
+.pre::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 47%, #fffaf3 0%, rgba(255,250,243,0) 100%)}
+.pre::after{content:"";position:absolute;inset:0;background:url(assets/grain.png) 0 0/307px 271px;opacity:.07;mix-blend-mode:multiply}
+.pre-wave{position:absolute;left:0;top:calc(100% - 1px);width:100%;height:16vh;overflow:hidden}
+.pre-wave svg{display:block;width:200%;height:100%;animation:preWave 2.4s linear infinite}
+@keyframes preWave{to{transform:translateX(-50%)}}
+.pre-logo{position:fixed;left:50%;top:50%;z-index:101;width:min(520px, 70vw);aspect-ratio:171/67;translate:-50% -50%;pointer-events:none}
+.pre-logo svg{display:block;width:100%;height:100%;overflow:visible;fill:var(--logo);visibility:hidden}
+.pre-logo.go svg{visibility:visible}
+.pre-logo svg g{transform-origin:85.5px 40px}
+/* the underline swoosh: it is the smashed patty itself, flying up into place */
+.pre-logo .pl-bar{transform-box:fill-box;transform-origin:50% 50%}
+.pl-shine{opacity:0}
+.pl-ring{transform-origin:85.5px 33.5px;opacity:0}
+
+/* the smash: a patty ball drops, bounces, and a burger press slams it flat */
+.smash{position:absolute;inset:0;--b:96px;--floor:calc(50% + 34px);pointer-events:none;visibility:hidden}
+.smash.go{visibility:visible}
+.sm-shadow{position:absolute;left:50%;top:var(--floor);width:calc(var(--b) * 1.25);height:calc(var(--b) * .2);translate:-50% -50%;border-radius:50%;background:radial-gradient(closest-side, rgba(110,40,12,.34), rgba(110,40,12,0))}
+.sm-ball{
+  position:absolute;left:50%;top:var(--floor);width:var(--b);height:var(--b);margin-left:calc(var(--b) * -.5);
+  translate:0 -100%;transform-origin:50% 100%;border-radius:50%;
+  /* fresh ground beef: speckles of fat and darker meat over the round red ball */
+  background:
+    radial-gradient(circle at 30% 60%, rgba(255,214,214,.34) 0 1.2px, transparent 2.6px) 0 0/23px 17px,
+    radial-gradient(circle at 70% 25%, rgba(70,0,3,.32) 0 1.5px, transparent 3px) 7px 3px/19px 29px,
+    radial-gradient(circle at 45% 85%, rgba(255,185,185,.26) 0 1px, transparent 2.2px) 4px 11px/13px 31px,
+    radial-gradient(circle at 15% 35%, rgba(90,0,4,.26) 0 1.2px, transparent 2.6px) 11px 6px/29px 23px,
+    radial-gradient(circle at 34% 28%, #e0343b 0%, #b10d15 38%, #8a0409 72%, #6c0206 100%);
+  box-shadow:inset calc(var(--b) * -.06) calc(var(--b) * -.08) calc(var(--b) * .16) rgba(50,0,2,.35);
+}
+/* comic sound effect at the impact */
+.sm-word{position:absolute;left:50%;top:var(--floor);z-index:3;translate:calc(var(--b) * 1.85 - 50%) calc(var(--b) * -1.6 - 50%);
+  font:900 calc(var(--b) * .5)/1 Montserrat,"Arial Black",sans-serif;letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap;
+  color:var(--btn);text-shadow:.06em .06em 0 var(--gold);opacity:0}
+/* the press carries the brand */
+.sm-emb{position:absolute;left:50%;top:50%;z-index:1;height:70%;aspect-ratio:171/67;translate:-50% -50%;padding:1px 5px;border-radius:3px;background:#3d3738;fill:#bdb4b5;box-sizing:content-box}
+/* giant, faint "JUST SMASH" running behind the whole loader */
+.pre-ghost{position:absolute;left:0;top:50%;display:flex;white-space:nowrap;translate:0 -62%;font:900 24vh/1 Montserrat,"Arial Black",sans-serif;letter-spacing:-.015em;text-transform:uppercase;color:rgba(143,4,8,.036);animation:ghostRun 26s linear infinite;pointer-events:none}
+.pre-ghost span{padding-right:.3em}
+@keyframes ghostRun{to{transform:translateX(-50%)}}
+.sm-ball::after{content:"";position:absolute;left:22%;top:16%;width:26%;height:16%;border-radius:50%;background:rgba(255,255,255,.35);filter:blur(2px);rotate:-30deg}
+.sm-press{position:absolute;left:50%;top:var(--floor);width:calc(var(--b) * 3.7);height:calc(var(--b) * 2.4);translate:-50% -100%}
+.sm-plate{
+  position:absolute;left:0;right:0;bottom:0;height:calc(var(--b) * .3);border-radius:calc(var(--b) * .1);
+  background:linear-gradient(180deg, #8d8586 0%, #5a5354 38%, #2f2a2b 100%);
+  box-shadow:0 calc(var(--b) * .1) calc(var(--b) * .22) rgba(50,14,2,.28), inset 0 2px 0 rgba(255,255,255,.3);
+}
+.sm-plate::after{content:"";position:absolute;left:6%;right:6%;top:30%;height:2px;border-radius:2px;background:rgba(255,255,255,.18)}
+.sm-handle{
+  position:absolute;left:50%;bottom:calc(var(--b) * .28);width:calc(var(--b) * .26);height:calc(var(--b) * 1.55);translate:-50% 0;border-radius:999px;
+  background:linear-gradient(90deg, #5d0205 0%, #a80a12 35%, #d8343b 52%, #a80a12 68%, #5d0205 100%);
+}
+.sm-handle::before{content:"";position:absolute;left:50%;top:calc(var(--b) * -.34);width:calc(var(--b) * .62);height:calc(var(--b) * .5);translate:-50% 0;border-radius:50%;background:radial-gradient(circle at 36% 30%, #e0343b, #a80a12 55%, #6c0206)}
+/* the hot griddle the patty lands on, with heat rising off it */
+.sm-griddle{
+  position:absolute;left:50%;top:var(--floor);width:calc(var(--b) * 5.4);height:calc(var(--b) * .2);translate:-50% 0;border-radius:calc(var(--b) * .08);
+  background:linear-gradient(180deg, #6e6768 0%, #3a3435 42%, #1f1b1c 100%);
+  box-shadow:0 calc(var(--b) * .14) calc(var(--b) * .32) rgba(60,20,5,.24), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.sm-griddle::after{content:"";position:absolute;left:5%;right:5%;top:0;height:2px;background:linear-gradient(90deg, transparent, rgba(255,190,120,.7), transparent)}
+.sm-heat{position:absolute;left:50%;top:var(--floor);width:calc(var(--b) * 4.6);height:calc(var(--b) * 1.2);translate:-50% -100%;overflow:visible;opacity:0}
+.sm-heat path{fill:none;stroke:rgba(196,128,90,.32);stroke-width:2.2;stroke-linecap:round;animation:heat 1.7s ease-in-out infinite}
+.sm-heat path:nth-child(2){animation-delay:-.5s}.sm-heat path:nth-child(3){animation-delay:-1s}.sm-heat path:nth-child(4){animation-delay:-1.3s}
+@keyframes heat{0%{opacity:0;transform:translateY(12px)}40%{opacity:1}100%{opacity:0;transform:translateY(-20px)}}
+/* comic starburst behind the patty at the moment of impact */
+.sm-burst{position:absolute;left:50%;top:calc(var(--floor) - var(--b) * .12);width:calc(var(--b) * 4.4);height:calc(var(--b) * 4.4);translate:-50% -50%;overflow:visible;fill:var(--gold);opacity:0}
+/* motion trails above the press while it slams down */
+.sm-trail{position:absolute;left:9%;right:9%;bottom:calc(var(--b) * .36);height:calc(var(--b) * 1.4);display:flex;justify-content:space-between;align-items:flex-end;opacity:0}
+.sm-trail i{width:3px;height:70%;border-radius:3px;background:linear-gradient(to top, rgba(110,100,100,.6), rgba(110,100,100,0))}
+.sm-trail i:nth-child(2),.sm-trail i:nth-child(3){height:100%}
+.sm-plate::before{content:"";position:absolute;left:7%;right:7%;top:50%;height:calc(var(--b) * .08);translate:0 -50%;background:radial-gradient(circle, #9a9293 0 35%, transparent 40%) 0 50%/calc(var(--b) * .5) 100% repeat-x;opacity:.55}
+.sm-steam{position:absolute;width:calc(var(--b) * .8);height:calc(var(--b) * .8);margin:calc(var(--b) * -.4) 0 0 calc(var(--b) * -.4);border-radius:50%;background:radial-gradient(closest-side, rgba(170,150,140,.42), rgba(170,150,140,0));filter:blur(3px)}
+.sm-fx{position:absolute;left:50%;top:var(--floor);width:0;height:0}
+.sm-fx i{position:absolute;left:0;top:0}
+.sm-ray{width:calc(var(--b) * .55);height:4px;margin-top:-2px;border-radius:4px;background:var(--gold);transform-origin:0 50%}
+.sm-bit{border-radius:45% 55% 50% 40%}
+.sm-flash{width:calc(var(--b) * 4.4);height:calc(var(--b) * 1.6);translate:-50% -50%;border-radius:50%;background:radial-gradient(closest-side, rgba(255,255,255,.95), rgba(255,244,228,0))}
+.sm-ring{width:calc(var(--b) * 2);height:calc(var(--b) * .7);translate:-50% -50%;border-radius:50%;border:2px solid #e2bf98}
+/* warm glow under the griddle: builds while it heats, flares on the slam */
+.sm-glow{position:absolute;left:50%;top:calc(var(--floor) + var(--b) * .1);width:calc(var(--b) * 6.4);height:calc(var(--b) * 1.7);translate:-50% -50%;border-radius:50%;background:radial-gradient(closest-side, rgba(255,128,40,.55), rgba(255,165,80,.22) 55%, rgba(255,170,90,0));opacity:0}
+/* grease spitting off the hot griddle */
+.sm-drop{border-radius:50%;background:#e9a548}
+/* logo pieces that pop out of the smashed patty */
+.pre-logo .pl-pc{transform-box:fill-box;transform-origin:50% 100%}
+.pre-logo .pl-dot{transform-origin:50% 50%}
+
+/* ───────── Hero frame ─────────
+   The stage keeps the approved artboard's own coordinates (1672 × 941).
+   1 design unit = var(--u). Side products are pinned to the viewport edges
+   (--ax · --bleed) so they always sit half-cropped, whatever the screen ratio. */
+.hero{
+  --mx:0; --my:0;
+  position:relative;height:100svh;min-height:480px;overflow:hidden;
+  container-type:size;isolation:isolate;background:var(--red-3);touch-action:pan-y;
+}
+.hero-in{
+  position:absolute;inset:0;
+  --u:min(calc(100cqw / 1672), calc(100cqh / 941));
+  --bleed:max(0px, calc(50cqw - 836 * var(--u)));
+}
+.stage{
+  position:absolute;
+  left:calc(50% - 836 * var(--u));
+  top:calc((100cqh - 941 * var(--u)) * .42);
+  width:calc(1672 * var(--u));height:calc(941 * var(--u));
+}
+.stage > *{position:absolute}
+.bg,.wave,.marks,.crumbs{left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.bg,.glow,.word,.wave{z-index:0}
+.marks{z-index:1}
+
+.glow{
+  left:calc(300 * var(--u));top:calc(80 * var(--u));width:calc(1080 * var(--u));height:calc(820 * var(--u));
+  background:radial-gradient(closest-side, var(--gc), transparent);
+  mix-blend-mode:screen;opacity:.8;pointer-events:none;transition:--gc 1.2s ease;
+}
+/* giant outlined product name, cut by the ivory wave */
+.word{left:0;top:calc(392 * var(--u));width:100%;height:calc(260 * var(--u));pointer-events:none;--d:3}
+.word span{
+  position:absolute;left:50%;top:0;translate:-50% 0;white-space:nowrap;
+  font:900 calc(var(--fs, 230) * var(--u))/1 Montserrat,sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  color:transparent;padding:0 .1em;
+  background:linear-gradient(180deg, rgba(255,243,230,.17), rgba(255,243,230,.05) 70%, rgba(255,243,230,.02));
+  -webkit-background-clip:text;background-clip:text;
+}
+
+.par{translate:calc(var(--mx) * var(--d) * var(--u) * -1) calc(var(--my) * var(--d) * var(--u) * -1)}
+
+/* ───────── Campaign lettering ───────── */
+/* the badge and the two-line headline are live text, so they can change with the product */
+.badge{z-index:2;left:0;top:calc(130 * var(--u));width:100%;height:calc(39 * var(--u));display:flex;justify-content:center;perspective:calc(600 * var(--u));pointer-events:none;--d:1.5}
+.badge-in{
+  display:flex;align-items:center;height:100%;padding:calc(1.5 * var(--u)) calc(20 * var(--u)) 0;background:#fdf1e3;color:var(--badge-ink);
+  font:900 calc(27.1 * var(--u))/1 Montserrat,"Arial Black",sans-serif;letter-spacing:calc(.15 * var(--u));
+  text-transform:uppercase;white-space:nowrap;transform-origin:50% 100%;
+}
+.title{z-index:2;left:0;top:0;width:100%;height:100%;pointer-events:none;--d:2}
+.hl{position:absolute;left:calc(var(--cx) * var(--u));top:calc(var(--ty) * var(--u));translate:-50% 0;white-space:nowrap;perspective:calc(700 * var(--u));transform-origin:50% 100%}
+.hl-in{
+  display:block;transform:scaleY(1.18);transform-origin:50% 100%;perspective:calc(700 * var(--u));
+  font:900 calc(var(--fs0) * var(--fit, 1) * var(--u))/1 Montserrat,"Arial Black",sans-serif;letter-spacing:-.006em;text-transform:uppercase;color:#fcf1e3;
+}
+.ch{display:inline-block;transform-origin:50% 100%;backface-visibility:hidden}
+/* gold accent riding the end of line two; changes with the product and fires on the smash */
+.acc{position:absolute;left:100%;bottom:6%;width:calc(var(--fs0) * .8 * var(--u));height:calc(var(--fs0) * .8 * var(--u));margin-left:calc(var(--fs0) * .06 * var(--u));overflow:visible;pointer-events:none}
+.ac{opacity:0;transform-origin:6px 96px}
+.ac.on{opacity:1}
+.ac-r{fill:var(--gold);transform-origin:6px 96px}
+.ac-s{fill:none;stroke:var(--gold);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;stroke-dashoffset:0}
+.ac-f{fill:var(--gold);transform-box:fill-box;transform-origin:50% 50%}
+.ac-rays.on{animation:accPulse 2.8s ease-in-out infinite}
+@keyframes accPulse{0%,100%{scale:1}50%{scale:1.08}}
+.ac-steam.on .ac-s{animation:accSteam 2.4s ease-in-out infinite}
+.ac-steam.on .ac-s:nth-child(2){animation-delay:-.8s}.ac-steam.on .ac-s:nth-child(3){animation-delay:-1.6s}
+@keyframes accSteam{0%,100%{translate:0 0;opacity:1}50%{translate:0 calc(-5px);opacity:.55}}
+.ac-crunch.on .ac-f{animation:accTwinkle 2.2s ease-in-out infinite}
+.ac-crunch.on .ac-f:nth-child(2){animation-delay:-.7s}.ac-crunch.on .ac-f:nth-child(3){animation-delay:-1.4s}
+@keyframes accTwinkle{0%,100%{scale:1;rotate:0deg}50%{scale:.82;rotate:14deg}}
+.hl1{--cx:843.5;--ty:183;--fs0:101;--mw:640}
+.hl2{--cx:837;--ty:278;--fs0:120;--mw:880}
+
+.sticker{z-index:2;left:calc(232 * var(--u));top:calc(178 * var(--u));width:calc(136 * var(--u));height:calc(136 * var(--u));--d:5;pointer-events:none}
+.sticker-spin{position:absolute;inset:0;transition:rotate 1.2s cubic-bezier(.2,.8,.2,1)}
+.sticker-ring{width:100%;height:100%;overflow:visible;animation:turn 28s linear infinite}
+.sticker-ring text{fill:var(--cream);font:800 10.6px Montserrat,sans-serif;letter-spacing:.16em}
+.sticker-ring circle{fill:none;stroke:rgba(252,241,227,.45);stroke-width:1;stroke-dasharray:2 4}
+.sticker-j{position:absolute;left:50%;top:50%;width:34%;translate:-50% -52%;fill:var(--cream);overflow:visible}
+@keyframes turn{to{transform:rotate(360deg)}}
+
+.seeds{z-index:1;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.seed{position:absolute;width:calc(var(--s) * var(--u));height:calc(var(--s) * .55 * var(--u));border-radius:50%;background:#f3d9ae;opacity:var(--o);rotate:var(--r);animation:drift var(--t) ease-in-out var(--dl) infinite alternate}
+@keyframes drift{to{transform:translate(calc(var(--dx) * var(--u)), calc(-46 * var(--u))) rotate(120deg)}}
+
+/* ───────── Shadows · garnish · products ───────── */
+.shadows,.garnish,.products,.fx,.fg{left:0;top:0;width:100%;height:100%;pointer-events:none}
+.shadows{z-index:3}
+.garnish{z-index:4}
+.crumbs,.fx{z-index:5}
+.products{z-index:6}
+.fg{z-index:8}
+
+.shadow{
+  position:absolute;
+  left:calc((var(--cx) - var(--rx)) * var(--u) + var(--ax, 0) * var(--bleed));top:calc((var(--cy) - var(--ry)) * var(--u));
+  width:calc(var(--rx) * 2 * var(--u));height:calc(var(--ry) * 2 * var(--u));
+  rotate:calc(var(--r) * 1deg);translate:calc(var(--mx) * var(--d) * var(--u) * -1) 0;
+  transition:left var(--move) var(--ease-io), top var(--move) var(--ease-io), width var(--move) var(--ease-io), height var(--move) var(--ease-io), rotate var(--move) var(--ease-io), opacity .5s ease;
+}
+.shadow i{position:absolute;inset:0;background:radial-gradient(closest-side, rgba(80,29,6,.58), rgba(101,45,12,.32) 40%, rgba(119,64,22,.12) 75%, rgba(119,58,20,0));animation:shadowBob var(--bd,5s) ease-in-out infinite alternate}
+.shadow i::after{content:"";position:absolute;left:calc(18.5% - 15 * var(--u));top:calc(27.5% - 1 * var(--u));width:63%;height:45%;background:radial-gradient(closest-side, rgba(76,28,7,.552), rgba(101,50,17,.28) 50%, rgba(94,44,10,0))}
+
+/* floating ingredients on three depth planes: back (small, soft), mid (sharp), front (big, out of focus) */
+.g{
+  position:absolute;
+  left:calc(var(--x) * var(--u) + var(--ax, 0) * var(--bleed));top:calc(var(--y) * var(--u));
+  width:calc(var(--w) * var(--u));height:calc(var(--h) * var(--u));rotate:calc(var(--r) * 1deg);
+}
+.g .gi{width:100%;height:100%;opacity:0}
+.g.on .gi{opacity:1}
+.g img{width:100%;height:100%;animation:float var(--fd,5s) ease-in-out var(--fdel,0s) infinite alternate}
+.g.back img{filter:blur(calc(1.3 * var(--u))) saturate(.9);opacity:.85}
+.fg .g img{filter:blur(calc(4.2 * var(--u)));animation-duration:calc(var(--fd,5s) * 1.3)}
+
+.prod{
+  position:absolute;
+  left:calc(var(--x) * var(--u) + var(--ax, 0) * var(--bleed));top:calc(var(--y) * var(--u));
+  width:calc(var(--w) * var(--u));height:calc(var(--h) * var(--u));rotate:calc(var(--r) * 1deg);
+  pointer-events:auto;
+  transition:left var(--move) var(--ease-io), top var(--move) var(--ease-io), width var(--move) var(--ease-io), height var(--move) var(--ease-io), rotate var(--move) var(--ease-io), opacity .5s ease;
+}
+.prod:not(.is-center){cursor:pointer}
+.prod .bob{width:100%;height:100%;animation:bob var(--bd,5s) ease-in-out infinite alternate}
+.prod img{width:100%;height:100%;object-fit:contain;transform-origin:50% 90%;transition:filter .35s ease, scale .45s var(--ease-out)}
+.prod:not(.is-center):hover img{filter:brightness(1.07) saturate(1.06);scale:1.035}
+.no-tr,.no-tr *{transition:none!important}
+.crumb{position:absolute;border-radius:45% 55% 50% 40%;pointer-events:none}
+/* the hero product leans toward the pointer */
+.prod .tilt{width:100%;height:100%;transition:transform .7s var(--ease-out)}
+/* warm embers drifting up from behind the hero product, like heat off the griddle */
+.embers{z-index:5;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.ember{position:absolute;width:calc(var(--s) * var(--u));height:calc(var(--s) * var(--u));border-radius:50%;background:radial-gradient(circle, #fff0c2 0%, #ffb347 42%, rgba(255,140,40,0) 72%);opacity:0;animation:emberUp var(--t) linear var(--dl) infinite}
+@keyframes emberUp{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:1}70%{opacity:.75}100%{opacity:0;transform:translate(calc(var(--dx) * var(--u)), calc(-320 * var(--u))) scale(1.15)}}
+/* soft shading on the far edges keeps the eye on the centre */
+.edges{position:absolute;inset:0;z-index:9;pointer-events:none;background:linear-gradient(90deg, rgba(45,0,3,.26), rgba(45,0,3,0) 12%, rgba(45,0,3,0) 88%, rgba(45,0,3,.26))}
+
+/* ───────── Navigation: transparent, sitting right on the crimson ─────────
+   Cream links and a cream logo (like the print on the fries cup), a frosted pill that
+   glides behind the hovered link, a cream "Order now" button, and a hairline that
+   frames the top of the hero with a gap for the logo. */
+.nav{
+  position:absolute;z-index:20;
+  left:calc(50% - 836 * var(--u));top:0;width:calc(1672 * var(--u));height:calc(104 * var(--u));
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:calc(16 * var(--u)) calc(64 * var(--u)) 0;pointer-events:none;
+  --nc:#fff3e6;
+}
+.nav > *{pointer-events:auto}
+.nav-side{position:relative;display:flex;align-items:center}
+.nav-side-l{justify-self:start;z-index:2;margin-left:calc(-18 * var(--u))}
+.nav-side-r{justify-self:end;gap:calc(10 * var(--u))}
+.nav-l{display:flex;align-items:center;gap:calc(4 * var(--u))}
+.lnk{
+  position:relative;z-index:1;display:flex;align-items:center;gap:calc(9 * var(--u));
+  height:calc(46 * var(--u));padding:0 calc(14 * var(--u));border-radius:999px;
+  font:800 calc(15 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--nc);
+  transition:background .3s ease;
+}
+/* Menu: the main door, so it gets a pill of its own with a little burger that opens up on hover */
+.lnk-menu{padding:0 calc(16 * var(--u)) 0 calc(5 * var(--u));background:rgba(255,243,230,.12);box-shadow:inset 0 0 0 1px rgba(255,243,230,.22)}
+/* One hover language for every item, left and right: the label flips over to its
+   coloured twin and the icon gives the same springy pop. */
+.nav-ico{flex:none;transition:transform .5s cubic-bezier(.2,1.6,.4,1)}
+.lnk:hover .nav-ico,.lnk:focus-visible .nav-ico,.has-mega:focus-within .nav-ico,
+.ghost-pill:hover .nav-ico,.ghost-pill:focus-visible .nav-ico,.pill:hover .nav-ico,.pill:focus-visible .nav-ico,
+.icon-btn:hover .nav-ico,.icon-btn:focus-visible .nav-ico{transform:rotate(-10deg) scale(1.14)}
+/* round icon buttons at both ends of the bar: search on the left, cart (with its count) on the right */
+.icon-btn{position:relative;display:grid;place-items:center;width:calc(46 * var(--u));height:calc(46 * var(--u));border-radius:50%;color:var(--nc);box-shadow:inset 0 0 0 1.5px rgba(255,243,230,.35);transition:background .25s ease}
+.icon-btn:hover{background:rgba(255,243,230,.12)}
+.icon-btn .nav-ico{display:grid;place-items:center;width:calc(21 * var(--u));height:calc(21 * var(--u))}
+.icon-btn svg{width:100%;height:100%;overflow:visible}
+.cart-n{position:absolute;right:calc(-3 * var(--u));top:calc(-3 * var(--u));min-width:calc(19 * var(--u));height:calc(19 * var(--u));padding:0 calc(5 * var(--u));border-radius:999px;background:var(--gold);color:#6d0306;font:800 calc(10.5 * var(--u))/calc(19 * var(--u)) Montserrat,sans-serif;text-align:center;transition:transform .5s cubic-bezier(.2,1.6,.4,1)}
+.icon-btn:hover .cart-n{transform:translateY(calc(-3 * var(--u))) scale(1.1)}
+.menu-ic{display:grid;place-items:center;width:calc(36 * var(--u));height:calc(36 * var(--u));border-radius:50%;background:var(--gold);color:#6d0306}
+.menu-ic svg{width:calc(20 * var(--u));height:calc(20 * var(--u));overflow:visible}
+.menu-ic path{transition:transform .45s cubic-bezier(.2,1.6,.4,1)}
+.mi-top{transform-origin:12px 10px}
+.lnk-menu:hover .mi-top,.has-mega:focus-within .mi-top{transform:translateY(-2.6px) rotate(-12deg)}
+.lnk-menu:hover .mi-mid,.has-mega:focus-within .mi-mid{transform:translateX(1.2px)}
+.lnk-menu:hover .mi-bot,.has-mega:focus-within .mi-bot{transform:translateY(1px)}
+/* Deals: a scalloped sale sticker that gives a little wobble now and then */
+.deal-ic{position:relative;display:grid;place-items:center;width:calc(28 * var(--u));height:calc(28 * var(--u));animation:stickerWob 5s ease-in-out 3s infinite}
+.deal-ic svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.deal-ic .dz{fill:var(--gold)}
+.deal-ic .pc{fill:none;stroke:#6d0306;stroke-width:2.1;stroke-linecap:round}
+@keyframes stickerWob{0%,86%,100%{rotate:0deg}89%{rotate:-14deg}92%{rotate:11deg}95%{rotate:-6deg}98%{rotate:3deg}}
+/* Our story: a little open book */
+.story-ic{display:grid;place-items:center;width:calc(26 * var(--u));height:calc(26 * var(--u));color:var(--gold)}
+.story-ic svg,.pin-ic svg{width:100%;height:100%;overflow:visible}
+.nav-side-r .lnk:hover{background:rgba(255,243,230,.1)}
+.roll{display:block;overflow:hidden;height:1.1em;line-height:1.1;margin-right:-.07em}
+.roll > span{display:block;transition:transform .5s var(--ease-out)}
+.roll > span::after{content:attr(data-t);display:block;color:var(--gold)}
+.lnk:hover .roll > span,.lnk:focus-visible .roll > span,.has-mega:hover > .lnk .roll > span,
+.ghost-pill:hover .roll > span,.ghost-pill:focus-visible .roll > span,.pill:hover .roll > span,.pill:focus-visible .roll > span{transform:translateY(-50%)}
+.chev{width:calc(10 * var(--u));height:calc(6 * var(--u));fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--ease-out), color .2s}
+.has-mega:hover .chev,.has-mega:focus-within .chev{transform:rotate(180deg);color:var(--gold)}
+.tag{display:inline-block;padding:calc(4 * var(--u)) calc(6 * var(--u)) calc(3 * var(--u));border-radius:calc(6 * var(--u));background:var(--gold);color:#6d0306;font:900 calc(9.5 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.1em;rotate:-8deg;translate:0 calc(-8 * var(--u))}
+.nav-ink{position:absolute;left:0;top:0;z-index:0;width:10px;height:10px;border-radius:999px;background:rgba(255,243,230,.1);box-shadow:inset 0 0 0 1px rgba(255,243,230,.26);opacity:0;pointer-events:none;transition:transform .5s var(--ease-out), width .5s var(--ease-out), height .5s var(--ease-out), opacity .25s ease}
+.nav-rule{
+  position:absolute;left:calc(64 * var(--u));right:calc(64 * var(--u));top:calc(114 * var(--u));height:1px;pointer-events:none;
+  background:linear-gradient(90deg, rgba(255,243,230,0), rgba(255,243,230,.24) 10%, rgba(255,243,230,.24) 37%, rgba(255,243,230,0) 42.5%, rgba(255,243,230,0) 57.5%, rgba(255,243,230,.24) 63%, rgba(255,243,230,.24) 90%, rgba(255,243,230,0));
+}
+.logo{position:relative;display:block;width:calc(196 * var(--u));height:calc(77 * var(--u));color:var(--nc);transition:transform .4s var(--ease-out)}
+.logo svg{display:block;width:100%;height:100%;fill:currentColor;overflow:visible;filter:drop-shadow(0 calc(5 * var(--u)) calc(10 * var(--u)) rgba(50,0,2,.3))}
+.logo:hover{transform:rotate(-3deg) scale(1.04)}
+.hero.handoff .logo{opacity:0}
+
+/* secondary action: an outlined pill with a location pin */
+.ghost-pill{
+  position:relative;display:flex;align-items:center;gap:calc(9 * var(--u));
+  height:calc(46 * var(--u));padding:0 calc(20 * var(--u)) 0 calc(15 * var(--u));border-radius:999px;
+  font:800 calc(15 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;color:var(--nc);
+  box-shadow:inset 0 0 0 1.5px rgba(255,243,230,.35);
+  transition:background .25s ease, color .25s ease, box-shadow .25s ease;
+}
+.pin-ic{display:grid;place-items:center;width:calc(20 * var(--u));height:calc(20 * var(--u));color:var(--gold)}
+.ghost-pill:hover{background:rgba(255,243,230,.12)}
+.p-cta .pill-ic svg{width:calc(17 * var(--u));height:calc(17 * var(--u))}
+.pill{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:calc(14 * var(--u));
+  height:calc(46 * var(--u));padding:0 calc(5 * var(--u)) 0 calc(22 * var(--u));
+  border-radius:999px;overflow:hidden;isolation:isolate;background:var(--nc);color:var(--btn);
+  font:800 calc(15 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 calc(10 * var(--u)) calc(24 * var(--u)) rgba(50,0,2,.28);
+  transition:background .25s ease, box-shadow .25s ease;
+}
+.pill::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(100deg, transparent 35%, rgba(255,255,255,.95) 50%, transparent 65%);transform:translateX(-130%);animation:shine 6s ease-in-out 3.5s infinite}
+@keyframes shine{0%,78%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+.pill:hover{background:#fff;box-shadow:0 calc(14 * var(--u)) calc(30 * var(--u)) rgba(50,0,2,.36)}
+.pill-ic{display:grid;place-items:center;width:calc(36 * var(--u));height:calc(36 * var(--u));border-radius:50%;background:var(--btn);color:var(--nc)}
+.pill-ic svg{width:calc(13 * var(--u));height:calc(13 * var(--u))}
+.pill .roll > span::after{color:var(--ink)}
+
+/* ── White-bar variant (default). ?nav=clear shows the transparent version above. ──
+   One slim warm-white capsule with the logo dead centre:
+     Menu   Deals   Branches       J.Smash       (search)   (cart)   [Contact us]
+   The three links (icon + word) grouped at the left end, the actions grouped at the
+   right end, the logo in the true centre with open space either side of it.
+   A sand pill glides behind the hovered link; search opens its own mega panel. */
+.hero.nav-white .nav{
+  --nc:var(--ink);left:50%;translate:-50% 0;top:calc(24 * var(--u));
+  width:calc(1290 * var(--u));height:calc(72 * var(--u));padding:0 calc(14 * var(--u));
+  column-gap:calc(64 * var(--u));
+}
+.hero.nav-white .nav-side-l{justify-self:start}
+.hero.nav-white .nav-side-r{justify-self:end}
+.hero.nav-white .nav-l{gap:calc(6 * var(--u))}
+.hero.nav-white .nav-side-r{gap:calc(10 * var(--u))}
+.hero.nav-white .nav::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;inset:0;
+  border-radius:999px;background:rgba(255,250,244,.97);
+  box-shadow:0 calc(14 * var(--u)) calc(34 * var(--u)) rgba(60,0,3,.24), inset 0 0 0 1px rgba(143,4,8,.06);
+}
+.hero.nav-white .nav-side-l{margin-left:0}
+.hero.nav-white .lnk{height:calc(48 * var(--u));padding:0 calc(18 * var(--u)) 0 calc(5 * var(--u))}
+.hero.nav-white .lnk-menu{background:none;box-shadow:none}
+/* every icon in the bar, left and right, sits in the same soft sand circle and turns
+   brand red (cream glyph) when its item is hovered or open */
+.hero.nav-white .menu-ic,.hero.nav-white .deal-ic,.hero.nav-white .pin-ic{
+  display:grid;place-items:center;width:calc(38 * var(--u));height:calc(38 * var(--u));border-radius:50%;
+  background:var(--sand);color:var(--btn);transition:background .25s ease, color .25s ease, transform .5s cubic-bezier(.2,1.6,.4,1);
+}
+.hero.nav-white .menu-ic svg,.hero.nav-white .pin-ic svg{width:calc(19 * var(--u));height:calc(19 * var(--u))}
+.hero.nav-white .deal-ic svg{position:static;width:calc(22 * var(--u));height:calc(22 * var(--u))}
+.hero.nav-white .lnk:hover .menu-ic,.hero.nav-white .has-mega:hover .menu-ic,.hero.nav-white .has-mega:focus-within .menu-ic,
+.hero.nav-white .lnk:hover .deal-ic,.hero.nav-white .lnk:focus-visible .deal-ic,
+.hero.nav-white .lnk:hover .pin-ic,.hero.nav-white .lnk:focus-visible .pin-ic,
+.hero.nav-white .icon-btn:hover,.hero.nav-white .icon-btn:focus-visible{background:var(--btn);color:#fff6ef}
+/* search: a round icon that opens a mega panel of its own, like the menu */
+.has-search{display:flex}
+.smega{
+  position:absolute;right:0;top:calc(100% + 34 * var(--u));z-index:5;width:calc(640 * var(--u));
+  padding:calc(16 * var(--u));background:#fffefe;border-radius:calc(28 * var(--u));
+  box-shadow:0 calc(26 * var(--u)) calc(60 * var(--u)) rgba(45,0,2,.28);
+  opacity:0;visibility:hidden;transform:translateY(calc(-12 * var(--u))) scale(.985);transform-origin:calc(100% - 330 * var(--u)) 0;
+  transition:opacity .22s ease, transform .4s var(--ease-out), visibility 0s linear .4s;
+}
+.smega::before{content:"";position:absolute;left:0;right:0;top:calc(-40 * var(--u));height:calc(40 * var(--u))}
+.has-search:hover .smega,.has-search:focus-within .smega,.has-search.is-open .smega{opacity:1;visibility:visible;transform:none;transition:opacity .22s ease, transform .4s var(--ease-out), visibility 0s}
+.hero .nav .has-search:hover .search-btn,.hero .nav .has-search:focus-within .search-btn,.hero .nav .has-search.is-open .search-btn{background:var(--btn);color:#fff6ef}
+.sm-field{display:flex;align-items:center;gap:calc(12 * var(--u));height:calc(58 * var(--u));padding:0 calc(10 * var(--u)) 0 calc(20 * var(--u));border-radius:999px;background:var(--sand);color:var(--btn);transition:box-shadow .25s ease}
+.sm-field:focus-within{box-shadow:inset 0 0 0 2px var(--btn)}
+.sm-field svg{width:calc(22 * var(--u));height:calc(22 * var(--u));flex:none}
+.sm-field input{flex:1;min-width:0;height:100%;border:0;background:none;outline:none;font:600 calc(17 * var(--u))/1 Inter,sans-serif;color:var(--ink)}
+.sm-field input::placeholder{color:#a58c80}
+.sm-field input::-webkit-search-cancel-button{display:none}
+.sm-field kbd{padding:calc(6 * var(--u)) calc(10 * var(--u));border-radius:999px;background:#fffefe;font:700 calc(11 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#a58c80}
+.sm-tags{display:flex;flex-wrap:wrap;align-items:center;gap:calc(8 * var(--u));margin:calc(14 * var(--u)) calc(4 * var(--u)) calc(16 * var(--u))}
+.sm-tags span,.sm-head span{font:800 calc(11 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#a58c80;margin-right:calc(4 * var(--u))}
+.sm-tags button{height:calc(34 * var(--u));padding:0 calc(15 * var(--u));border-radius:999px;box-shadow:inset 0 0 0 1.5px #ead7c8;font:700 calc(13 * var(--u))/1 Inter,sans-serif;color:var(--ink);transition:box-shadow .2s ease, color .2s ease, background .2s ease}
+.sm-tags button:hover,.sm-tags button:focus-visible,.sm-tags button.is-on{box-shadow:inset 0 0 0 1.5px var(--btn);color:var(--btn);background:#fff7f0}
+.sm-head{margin:0 calc(4 * var(--u)) calc(10 * var(--u))}
+.sm-res{display:grid;grid-template-columns:1fr 1fr;gap:calc(10 * var(--u))}
+.sr{display:flex;align-items:center;gap:calc(12 * var(--u));padding:calc(10 * var(--u)) calc(16 * var(--u)) calc(10 * var(--u)) calc(10 * var(--u));border-radius:calc(18 * var(--u));background:#fbf2e8;transition:background .25s ease}
+.sr[hidden]{display:none}
+.sr:hover,.sr:focus-visible{background:#f6e3cf}
+.sr-img{display:grid;place-items:center;width:calc(66 * var(--u));height:calc(56 * var(--u));flex:none}
+.sr-img img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .5s var(--ease-out)}
+.sr:hover .sr-img img{transform:scale(1.1) rotate(-5deg)}
+.sr-t{display:flex;flex-direction:column;gap:calc(5 * var(--u));min-width:0}
+.sr-t b{font:800 calc(14 * var(--u))/1.1 Montserrat,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.sr-t small{font:500 calc(12 * var(--u))/1.3 Inter,sans-serif;color:#7a5a4e}
+.sr i{margin-left:auto;align-self:flex-start;padding:calc(4 * var(--u)) calc(8 * var(--u));border-radius:999px;background:#fffefe;font:800 calc(9.5 * var(--u))/1 Montserrat,sans-serif;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--btn)}
+.sm-empty{margin:calc(6 * var(--u)) calc(4 * var(--u)) calc(4 * var(--u));font:500 calc(14 * var(--u))/1.4 Inter,sans-serif;color:#7a5a4e}
+.hero.nav-white .mega{left:calc(-8 * var(--u))}
+.hero.nav-white .icon-btn{background:var(--sand);box-shadow:none;color:var(--btn);width:calc(48 * var(--u));height:calc(48 * var(--u));transition:background .25s ease, color .25s ease}
+.hero.nav-white .cart-n{background:var(--btn);color:#fff6ef;box-shadow:0 0 0 calc(2 * var(--u)) #fffaf4}
+.hero.nav-white .pill{height:calc(48 * var(--u));padding:0 calc(6 * var(--u)) 0 calc(26 * var(--u))}
+.hero.nav-white .roll > span::after{color:var(--btn)}
+.hero.nav-white .pill .roll > span::after{color:var(--gold)}
+.hero.nav-white .story-ic,.hero.nav-white .pin-ic{color:var(--btn)}
+.hero.nav-white .deal-ic .dz{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.hero.nav-white .deal-ic .pc{stroke:currentColor;stroke-width:1.9}
+.hero.nav-white .has-mega:hover .chev,.hero.nav-white .has-mega:focus-within .chev{color:var(--btn)}
+.hero.nav-white .nav-ink{background:var(--sand);box-shadow:none;height:calc(44 * var(--u))}
+.hero.nav-white .nav-side-r .lnk:hover{background:var(--sand)}
+.hero.nav-white .nav-rule{display:none}
+.hero.nav-white .logo{width:calc(148 * var(--u));height:calc(58 * var(--u));color:var(--logo)}
+.hero.nav-white .logo svg{filter:none}
+.hero.nav-white .ghost-pill{color:var(--ink);box-shadow:inset 0 0 0 1.5px #ead7c8}
+.hero.nav-white .ghost-pill svg{color:var(--btn)}
+.hero.nav-white .ghost-pill:hover{background:var(--sand);box-shadow:inset 0 0 0 1.5px var(--sand)}
+.hero.nav-white .pill{background:var(--btn);color:#fff6ef;box-shadow:inset 0 calc(-2 * var(--u)) 0 rgba(0,0,0,.14)}
+.hero.nav-white .pill::before{background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.32) 50%, transparent 70%)}
+.hero.nav-white .pill:hover{background:var(--btn-hi);box-shadow:inset 0 calc(-2 * var(--u)) 0 rgba(0,0,0,.14), 0 calc(8 * var(--u)) calc(18 * var(--u)) rgba(143,4,8,.28)}
+.hero.nav-white .pill-ic{background:#fff6ef;color:var(--btn)}
+@keyframes capIn{from{opacity:0;transform:translateY(calc(-30 * var(--u))) scaleX(.94)}}
+.hero.is-in.nav-white .nav::before{animation:capIn .8s var(--ease-out) .05s backwards}
+
+/* mega menu (real J.Smash categories) */
+.has-mega{position:relative}
+.mega{
+  position:absolute;left:calc(-8 * var(--u));top:calc(100% + 34 * var(--u));
+  display:grid;grid-template-columns:repeat(4, calc(160 * var(--u))) calc(196 * var(--u));gap:calc(12 * var(--u));
+  padding:calc(14 * var(--u));background:#fffefe;border-radius:calc(28 * var(--u));
+  box-shadow:0 calc(26 * var(--u)) calc(60 * var(--u)) rgba(45,0,2,.28);
+  opacity:0;visibility:hidden;transform:translateY(calc(-12 * var(--u))) scale(.985);transform-origin:calc(80 * var(--u)) 0;
+  transition:opacity .22s ease, transform .4s var(--ease-out), visibility 0s linear .4s;
+}
+.mega::before{content:"";position:absolute;left:0;right:0;top:calc(-38 * var(--u));height:calc(38 * var(--u))}
+.has-mega:hover .mega,.has-mega:focus-within .mega{opacity:1;visibility:visible;transform:none;transition:opacity .22s ease, transform .4s var(--ease-out), visibility 0s}
+.tile{display:flex;flex-direction:column;padding:calc(10 * var(--u)) calc(12 * var(--u)) calc(14 * var(--u));border-radius:calc(18 * var(--u));background:#fbf2e8;transition:background .25s ease}
+.tile-img{height:calc(100 * var(--u));display:flex;align-items:center;justify-content:center;gap:calc(4 * var(--u));margin-bottom:calc(10 * var(--u))}
+.tile-img img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .5s var(--ease-out)}
+.tile-img.two img{max-width:48%}
+.tile:hover{background:#f6e3cf}
+.tile:hover .tile-img img{transform:scale(1.09) rotate(-4deg)}
+.tile b{font:800 calc(13.5 * var(--u))/1.1 Montserrat,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.tile small{margin-top:calc(5 * var(--u));font:500 calc(12 * var(--u))/1.35 Inter,sans-serif;color:#7a5a4e}
+.deal{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:calc(16 * var(--u));border-radius:calc(18 * var(--u));background:var(--btn);color:#fff6ef;transition:background .25s ease}
+.deal:hover{background:var(--btn-hi)}
+.deal-k{font:800 calc(11.5 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;opacity:.75}
+.deal b{font:900 calc(21 * var(--u))/1.05 Montserrat,sans-serif;text-transform:uppercase}
+.deal-cta{display:flex;align-items:center;gap:calc(6 * var(--u));font:700 calc(13 * var(--u))/1 Inter,sans-serif}
+.deal-cta svg{width:calc(11 * var(--u));height:calc(11 * var(--u));transition:transform .3s var(--ease-out)}
+.deal:hover .deal-cta svg{transform:translateX(3px)}
+.deal-j{position:absolute;right:calc(-18 * var(--u));bottom:calc(-26 * var(--u));width:calc(120 * var(--u));fill:rgba(255,246,239,.1);rotate:-12deg}
+.burger,.nav-drop{display:none}
+
+/* ───────── Product cards (bottom centre) ─────────
+   Three soft cards on the ivory. Each product photo pops out over the top of its card;
+   the active card lifts, turns white and carries a thin red line that fills for the autoplay. */
+.strip{position:absolute;z-index:15;left:50%;bottom:calc(14 * var(--u));translate:-50% 0;display:flex;align-items:flex-end;gap:calc(14 * var(--u))}
+.sw-card{
+  position:relative;display:flex;align-items:center;height:calc(62 * var(--u));min-width:calc(196 * var(--u));
+  padding:0 calc(26 * var(--u)) 0 calc(84 * var(--u));border-radius:calc(22 * var(--u));text-align:left;
+  background:rgba(255,249,241,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:inset 0 0 0 1px rgba(143,4,8,.09);opacity:.75;
+  transition:background .45s ease, box-shadow .45s ease, transform .55s var(--ease-out), opacity .3s ease;
+}
+.sw-card:hover{opacity:1;transform:translateY(calc(-3 * var(--u)))}
+.sw-card.is-active{opacity:1;background:#fffefe;box-shadow:0 calc(16 * var(--u)) calc(32 * var(--u)) rgba(90,30,10,.18), inset 0 0 0 1px rgba(143,4,8,.05);transform:translateY(calc(-8 * var(--u)))}
+.sw-img{
+  position:absolute;left:calc(4 * var(--u));bottom:calc(8 * var(--u));width:calc(78 * var(--u));height:calc(72 * var(--u));object-fit:contain;rotate:-8deg;
+  filter:grayscale(.45) drop-shadow(0 calc(6 * var(--u)) calc(7 * var(--u)) rgba(60,20,5,.22));
+  transition:transform .6s var(--ease-out), filter .35s ease;
+}
+.sw-card:hover .sw-img{transform:translateY(calc(-4 * var(--u))) rotate(4deg)}
+.sw-card.is-active .sw-img{filter:drop-shadow(0 calc(10 * var(--u)) calc(10 * var(--u)) rgba(60,20,5,.28));transform:translateY(calc(-12 * var(--u))) scale(1.14) rotate(6deg)}
+.sw-meta{display:flex;flex-direction:column;align-items:flex-start;gap:calc(5 * var(--u))}
+.sw-meta i{font:800 calc(10.5 * var(--u))/1 Montserrat,sans-serif;font-style:normal;letter-spacing:.16em;color:var(--btn)}
+.sw-meta b{font:800 calc(14.5 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:var(--ink)}
+.sw-bar{position:absolute;left:calc(84 * var(--u));right:calc(26 * var(--u));bottom:calc(10 * var(--u));height:calc(2.5 * var(--u));border-radius:2px;background:rgba(143,4,8,.12);overflow:hidden;opacity:0;transition:opacity .3s ease}
+.sw-bar span{display:block;height:100%;background:var(--btn);transform:scaleX(0);transform-origin:left}
+.sw-card.is-active .sw-bar{opacity:1}
+.sw-card.is-active .sw-bar span{animation:fillx var(--D,6s) linear forwards}
+.hero.is-paused .sw-card.is-active .sw-bar span{animation-play-state:paused}
+.hero.is-calm .sw-card.is-active .sw-bar span{animation:none;transform:none}
+@keyframes fillx{to{transform:scaleX(1)}}
+
+/* Custom cursor over the products: a spinning "Order now" seal on the hero product,
+   a small cream nudge-arrow on the side products. It trails the pointer, stretches
+   with speed, squashes when pressed; the dot marks the exact pointer. */
+.cur{position:absolute;left:0;top:0;z-index:16;width:0;height:0;pointer-events:none;translate:var(--px,0) var(--py,0);--k:0;--press:1}
+.cur.on{--k:1}
+.cur.on.is-side{--k:.56}
+.cur.is-down{--press:.82}
+.cur-body{
+  position:absolute;left:calc(-64 * var(--u));top:calc(-64 * var(--u));width:calc(128 * var(--u));height:calc(128 * var(--u));border-radius:50%;
+  background:var(--btn);box-shadow:0 calc(18 * var(--u)) calc(36 * var(--u)) rgba(60,0,3,.36), inset 0 0 0 calc(1.5 * var(--u)) rgba(255,236,220,.18);
+  scale:calc(var(--k) * var(--press));
+  transition:scale .5s cubic-bezier(.2,1.45,.4,1), background-color .3s ease;
+}
+.cur.is-down .cur-body{transition:scale .14s ease-out, background-color .3s ease}
+.cur.is-side .cur-body{background:#fdf1e3;box-shadow:0 calc(14 * var(--u)) calc(30 * var(--u)) rgba(60,0,3,.3)}
+.cur-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible;animation:turn 11s linear infinite;transition:opacity .25s ease, scale .4s var(--ease-out)}
+.cur-ring text{fill:#fdf1e3;font:800 10.4px Montserrat,sans-serif;letter-spacing:.2em}
+.cur.is-side .cur-ring{opacity:0;scale:.7}
+.cur-core{
+  position:absolute;left:50%;top:50%;width:46%;height:46%;translate:-50% -50%;border-radius:50%;
+  display:grid;place-items:center;background:#fdf1e3;color:var(--btn);transition:background-color .3s ease, scale .4s var(--ease-out);
+}
+.cur.is-side .cur-core{background:transparent;scale:1.3}
+.cur-core svg{width:46%;height:46%;rotate:var(--ar,-45deg);transition:rotate .5s cubic-bezier(.2,1.4,.4,1)}
+.cur-dot{position:absolute;left:calc(-4 * var(--u));top:calc(-4 * var(--u));width:calc(8 * var(--u));height:calc(8 * var(--u));border-radius:50%;background:#fdf1e3;box-shadow:0 0 0 calc(2 * var(--u)) var(--btn);translate:var(--ox,0) var(--oy,0);opacity:0;transition:opacity .2s ease}
+.cur.on .cur-dot{opacity:1}
+.cur-ripple{position:absolute;left:calc(-64 * var(--u));top:calc(-64 * var(--u));width:calc(128 * var(--u));height:calc(128 * var(--u));border-radius:50%;border:calc(2 * var(--u)) solid #fdf1e3}
+.cur.is-side .cur-ripple{border-color:#fdf1e3}
+.hero.has-cursor .prod{cursor:none}
+.prod .tilt{transition:transform .7s var(--ease-out), scale .45s cubic-bezier(.2,1.5,.4,1)}
+.hero.is-pressing .prod.is-center .tilt{scale:.965;transition:transform .7s var(--ease-out), scale .14s ease-out}
+
+.mobile-ui{display:none}
+
+/* ───────── Idle motion ───────── */
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(calc(var(--amp,-8) * var(--u)))}}
+@keyframes shadowBob{from{transform:scale(1);opacity:1}to{transform:scale(.93);opacity:.82}}
+@keyframes float{from{transform:translateY(calc(-5 * var(--u))) rotate(-5deg)}to{transform:translateY(calc(6 * var(--u))) rotate(5deg)}}
+@keyframes sway{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+@keyframes spin{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+@keyframes spark{0%,100%{transform:scale(.9);opacity:.75}50%{transform:scale(1.07);opacity:1}}
+/* hand-drawn doodles: every stroke is normalised (pathLength=1) so it can draw itself in and out */
+.marks .dd *{fill:none;stroke:#ec9064;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;stroke-dashoffset:1}
+.marks .dd.on *{stroke-dashoffset:0}
+.marks .dd-slot{opacity:.52}
+.dd-a{transform-origin:113px 195px;animation:sway 6.5s ease-in-out infinite alternate}
+.dd-b{transform-origin:1446px 212px;animation:spin 9s ease-in-out infinite alternate}
+
+/* ───────── Entrance ───────── */
+.hero.is-loading .stage > :not(.bg):not(.wave):not(.glow),.hero.is-loading .nav,.hero.is-loading .strip{opacity:0}
+@keyframes fadeDown{from{opacity:0;transform:translateY(calc(-14 * var(--u)))}}
+@keyframes rise{from{transform:translateY(108%)}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes popIn{from{opacity:0;transform:scale(.4) rotate(-90deg)}}
+@keyframes stripIn{from{opacity:0;transform:translateY(calc(30 * var(--u))) scale(.94)}}
+@keyframes drawRule{from{transform:scaleX(0);opacity:0}}
+.hero.is-in .nav-side-l{animation:fadeDown .8s var(--ease-out) .2s backwards}
+.hero.is-in .nav-side-r{animation:fadeDown .8s var(--ease-out) .3s backwards}
+.hero.is-in .nav-rule{animation:drawRule 1.2s var(--ease-out) .35s backwards}
+.hero.is-in.is-calm .logo{animation:fadeIn .4s ease backwards}
+.hero.is-in .badge{animation:fadeDown .7s var(--ease-out) .25s backwards}
+.hero.is-in .marks{animation:fadeIn 1.2s ease .5s backwards}
+.hero.is-in .word{animation:fadeIn 1.4s ease .7s backwards}
+.hero.is-in .sticker{animation:popIn 1s var(--ease-out) .9s backwards}
+.hero.is-in .seeds{animation:fadeIn 2s ease .8s backwards}
+.hero.is-in .crumbs{animation:fadeIn .8s ease 1.25s backwards}
+.hero.is-in .glow{animation:fadeIn 1.6s ease .3s backwards}
+.hero.is-in .strip{animation:stripIn .9s var(--ease-out) 1.45s backwards}
+.hero.is-in .mobile-ui{animation:fadeIn .8s ease 1.5s backwards}
+
+/* calm mode: reduced motion or ?still */
+.hero.is-calm *{animation-duration:0s!important;animation-delay:0s!important}
+.hero.is-calm .bob,.hero.is-calm .shadow i,.hero.is-calm .g img,.hero.is-calm .dd-a,.hero.is-calm .dd-b,.hero.is-calm .ac,.hero.is-calm .ac *,.hero.is-calm .deal-ic,.hero.is-calm .sticker-ring,.hero.is-calm .pill::before,.hero.is-calm .seed{animation:none!important}
+.hero.is-calm .ember{display:none}
+.hero.is-calm{--move:.45s}
+
+/* ───────── Phones & portrait tablets ───────── */
+@media (orientation:portrait) and (max-width:1100px){
+  .hero{height:100svh;min-height:600px;max-height:1400px}
+  .hero-in{--u:min(calc(100cqw / 700), calc(100cqh / 1130))}
+  .stage{top:max(0px, calc((100cqh - 1130 * var(--u)) / 2))}
+  .badge{top:calc(150 * var(--u))}
+  .hl1{--ty:206;--fs0:79;--mw:520}
+  .hl2{--cx:836;--ty:290;--fs0:94;--mw:636}
+  .acc{left:auto;right:-1%;bottom:96%;width:calc(var(--fs0) * .5 * var(--u));height:calc(var(--fs0) * .5 * var(--u));margin:0}
+  .word{top:calc(470 * var(--u))}
+  .prod:not(.is-center),.shadow:not(.is-center){opacity:0;pointer-events:none}
+  .strip,.sticker,.fg,.seeds,.cur{display:none}
+
+  .nav{left:0;width:100%;height:66px;display:flex;align-items:center;gap:6px;padding:10px 12px 0 8px}
+  .nav-side-l,.nav-side-r .lnk,.nav-side-r .ghost-pill,.nav-rule{display:none}
+  .hero.nav-white .p-cta{width:auto}
+  .has-search{display:none}
+  .hero.nav-white .pill{height:40px}
+  .nav-side-r{gap:6px}
+  .hero.nav-white .nav-side-r .icon-btn{width:40px;height:40px}
+  .nav-side-r .icon-btn .nav-ico{width:19px;height:19px}
+  .nav-side-r .cart-n{min-width:16px;height:16px;padding:0 4px;font-size:9.5px;line-height:16px;right:-2px;top:-2px}
+  .nav-side-r{margin-left:auto}
+  .logo{width:112px;height:auto;aspect-ratio:171/67;margin:0}
+  .hero.nav-white .nav{left:10px;translate:none;column-gap:6px;width:calc(100% - 20px);top:10px;height:56px;padding:0 6px 0 4px;background:#fffefe;border-radius:999px;box-shadow:0 10px 26px rgba(60,0,3,.22)}
+  .hero.nav-white .nav::before{display:none}
+  .hero.nav-white .logo{width:100px;height:auto}
+  .hero.nav-white .burger{color:var(--ink)}
+  .logo:hover{transform:none}
+  .pill{height:40px;padding:0 5px 0 14px;font-size:12px;letter-spacing:.04em;gap:8px}
+  .pill-ic{width:30px;height:30px}
+  .pill-ic svg{width:11px;height:11px}
+  .burger{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;color:var(--nc);flex:none}
+  .burger svg{width:22px;height:22px}
+  .burger path{transition:transform .35s var(--ease-out), opacity .2s;transform-origin:12px 12px}
+  .burger .b3{stroke-dasharray:10 30;transition:transform .35s var(--ease-out), stroke-dasharray .35s var(--ease-out)}
+  .nav.is-open .burger .b1{transform:translateY(5px) rotate(45deg)}
+  .nav.is-open .burger .b2{opacity:0}
+  .nav.is-open .burger .b3{stroke-dasharray:16 30;transform:translateY(-5px) rotate(-45deg)}
+  .nav-drop{position:absolute;left:10px;right:10px;top:calc(100% + 8px);background:#fffefe;border-radius:22px;padding:16px 16px 8px;flex-direction:column;box-shadow:0 18px 40px rgba(40,0,2,.35)}
+  .nav.is-open .nav-drop{display:flex;animation:fadeDown .35s var(--ease-out)}
+  .drop-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .drop-cats a{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:#fbf2e8;font:800 12px/1.1 Montserrat,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+  .drop-cats img{width:40px;height:34px;object-fit:contain;flex:none}
+  .drop-links a{display:block;font:700 15px/1 Montserrat,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:14px 4px;border-top:1px solid #f1e6dc}
+
+  .mobile-ui{display:flex;flex-direction:column;align-items:center;gap:calc(34 * var(--u));left:calc(836 * var(--u));top:calc(928 * var(--u));translate:-50% 0;width:calc(660 * var(--u));z-index:9}
+  .chips{display:flex;gap:calc(12 * var(--u))}
+  .chip{height:calc(62 * var(--u));padding:0 calc(26 * var(--u));border-radius:999px;border:1.5px solid rgba(143,4,8,.28);font:700 calc(23 * var(--u))/1 Inter,sans-serif;color:#3e1714;transition:background .3s ease,color .3s ease,border-color .3s ease}
+  .chip.is-active{background:var(--btn);border-color:var(--btn);color:#fff6ef}
+  .mcta{display:flex;gap:calc(16 * var(--u));width:100%}
+  .mcta a{flex:1;height:calc(94 * var(--u));border-radius:999px;display:flex;align-items:center;justify-content:center;gap:8px;font:800 calc(24 * var(--u))/1 Montserrat,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+  .mcta .ghost{border:2px solid var(--btn);color:var(--btn)}
+  .mcta .solid{background:var(--btn);color:#fff6ef}
+  .mcta svg{width:.85em;height:.85em}
+}
+@media (orientation:portrait) and (max-width:359px){
+  .logo{width:90px}
+  .p-order{padding:0 12px;font-size:11px}
+  .p-order .pill-ic{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- J.Smash wordmark, vectorised from the brand logo -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="js-j" fill-rule="evenodd" d="M41.75 8.6Q40.8 8.59 35.85 8.84Q30.9 9.1 28.7 9.65Q26.5 10.2 24.45 11.19Q22.4 12.18 21.21 13.29Q20.01 14.4 19.51 15.13Q19 15.86 18.5 17.03Q18 18.2 17.76 20.35Q17.52 22.5 17.86 24.05Q18.21 25.6 18.71 26.34Q19.2 27.07 19.8 27.31Q20.4 27.54 22.45 27.56Q24.5 27.59 24.97 27.34Q25.44 27.1 25.49 26.75Q25.54 26.4 25.25 25.85Q24.97 25.3 24.77 24.25Q24.57 23.2 24.63 22.1Q24.69 21 24.92 20.1Q25.15 19.2 26.02 18.2Q26.89 17.2 27.64 16.69Q28.4 16.18 30.8 15.51Q33.2 14.83 33.7 14.94Q34.2 15.05 34.35 15.48Q34.5 15.9 33.8 17.95Q33.1 20 31.39 26.35Q29.67 32.7 28.77 35.2Q27.88 37.7 27.44 37.97Q27 38.24 25.85 38.26Q24.7 38.29 22.65 38.63Q20.6 38.98 19.3 39.38Q18 39.79 16.65 40.49Q15.3 41.2 14.14 42.15Q12.97 43.1 12.07 44.3Q11.18 45.5 10.7 46.55Q10.23 47.6 9.95 48.75Q9.68 49.9 9.65 51.15Q9.61 52.4 9.85 53.55Q10.09 54.7 10.61 55.7Q11.13 56.7 12.21 57.71Q13.3 58.71 14.4 59.16Q15.5 59.6 16.4 59.76Q17.3 59.93 18.6 59.86Q19.9 59.8 21.55 59.28Q23.2 58.76 24.1 58.29Q25 57.82 26.8 56.05Q28.6 54.28 29.62 52.64Q30.63 51 32.13 47.3Q33.63 43.6 34.35 40.9Q35.08 38.2 36.38 34.45Q37.69 30.7 40.61 20.15Q43.53 9.6 43.41 9.3Q43.3 9 43 8.81Q42.7 8.62 41.75 8.6ZM23.14 43.7Q25 43.2 25.37 43.35Q25.75 43.5 25.79 44.15Q25.82 44.8 24.26 47.85Q22.7 50.9 21.6 51.96Q20.5 53.02 19.75 53.34Q19 53.65 18.48 53.52Q17.97 53.4 17.48 52.95Q17 52.5 16.83 51.65Q16.66 50.8 16.8 49.8Q16.94 48.8 17.47 47.88Q18 46.95 18.7 46.16Q19.4 45.37 20.34 44.78Q21.28 44.2 23.14 43.7Z"/>
+    <path id="js-dot" d="M40.6 41.14Q39.2 41.09 38.65 41.39Q38.1 41.7 37.73 42.35Q37.36 43 37.25 43.55Q37.14 44.1 37.27 44.62Q37.4 45.13 37.85 45.83Q38.3 46.53 38.7 46.75Q39.1 46.96 39.75 47.05Q40.4 47.14 41.18 46.97Q41.96 46.8 42.83 45.87Q43.7 44.93 43.75 44.37Q43.81 43.8 43.67 43.25Q43.53 42.7 42.76 41.94Q42 41.19 40.6 41.14Z"/>
+    <path id="js-word" fill-rule="evenodd" d="M68.2 8.17Q66.3 8.09 65.4 8.29Q64.5 8.48 62.9 9.4Q61.3 10.31 60.17 11.61Q59.03 12.9 58.47 14.25Q57.9 15.6 57.76 17.15Q57.63 18.7 57.86 20.53Q58.1 22.35 58.59 23.98Q59.09 25.6 59.93 27.55Q60.78 29.5 61.42 31.9Q62.07 34.3 61.98 36.45Q61.9 38.6 61.3 39.73Q60.7 40.86 60.11 41.33Q59.52 41.8 58.31 42.16Q57.1 42.53 56.24 42.21Q55.38 41.9 54.76 41.3Q54.14 40.7 53.85 39.05Q53.56 37.4 53.76 36Q53.97 34.6 54.45 33.65Q54.93 32.7 54.87 32.35Q54.81 32 54.61 31.83Q54.4 31.66 49.15 31.54Q43.9 31.42 43.15 31.54Q42.4 31.66 42.14 31.93Q41.89 32.2 41.41 33.25Q40.94 34.3 40.97 34.99Q41 35.68 41.5 35.89Q42 36.1 43.8 35.94Q45.6 35.77 46.15 35.92Q46.7 36.08 46.92 38.39Q47.13 40.7 47.62 42.03Q48.1 43.35 48.41 43.78Q48.72 44.2 48.96 44.54Q49.2 44.88 50.5 45.83Q51.8 46.78 53.6 47.22Q55.4 47.66 57.1 47.58Q58.8 47.5 60.45 47.08Q62.1 46.66 63.81 45.68Q65.53 44.7 66.56 43.5Q67.6 42.3 68.14 41.35Q68.68 40.4 69.2 38.45Q69.72 36.5 69.7 34.95Q69.68 33.4 69.21 31.4Q68.75 29.4 68.25 27.95Q67.75 26.5 66.38 23.35Q65.01 20.2 64.85 19.1Q64.69 18 64.85 16.75Q65.01 15.5 65.75 14.57Q66.5 13.63 66.95 13.49Q67.4 13.35 67.85 13.48Q68.3 13.6 68.75 13.97Q69.2 14.33 69.52 14.92Q69.85 15.5 69.75 17.55Q69.65 19.6 70.03 19.81Q70.4 20.02 71.8 20.03Q73.2 20.03 73.9 19.93Q74.6 19.84 75.03 19.32Q75.45 18.8 75.66 17.05Q75.87 15.3 75.79 14.7Q75.7 14.1 75.24 12.95Q74.77 11.8 74.22 11.05Q73.68 10.3 73.09 9.81Q72.5 9.31 71.3 8.78Q70.1 8.25 68.2 8.17ZM133.8 23.37Q132.9 23.39 132 23.69Q131.1 24 130.2 24.76Q129.3 25.52 128.72 26.41Q128.15 27.3 127.95 28.95Q127.74 30.6 127.29 31.65Q126.84 32.7 123.87 36.71Q120.9 40.72 120.2 41.1Q119.5 41.48 119.24 41.09Q118.99 40.7 119.11 39.9Q119.23 39.1 120.05 36.75Q120.88 34.4 121.54 31.88Q122.2 29.37 122.94 27.43Q123.67 25.5 123.59 25.15Q123.5 24.8 123.2 24.56Q122.9 24.32 120.55 24.29Q118.2 24.27 117.8 24.5Q117.4 24.72 116.95 25.3Q116.5 25.89 115.5 25.11Q114.5 24.33 113.6 24.12Q112.7 23.91 111.7 24Q110.7 24.09 109.6 24.57Q108.5 25.06 107.31 26.08Q106.13 27.1 105.16 28.33Q104.2 29.56 103.22 31.68Q102.23 33.8 101.53 36.65Q100.82 39.5 100.26 40.16Q99.7 40.83 99 41.3Q98.3 41.78 97.8 41.56Q97.3 41.34 97.24 40.67Q97.17 40 98.14 36.8Q99.1 33.6 99.45 32.95Q99.8 32.3 100.32 30.35Q100.83 28.4 100.78 27.35Q100.73 26.3 100.16 25.5Q99.6 24.7 98.8 24.39Q98 24.09 97.15 24.18Q96.3 24.27 95.3 24.71Q94.3 25.16 92.9 26.36Q91.5 27.55 91.35 27.4Q91.2 27.25 91 26.23Q90.8 25.22 89.95 24.75Q89.1 24.29 88.2 24.25Q87.3 24.21 86.35 24.51Q85.4 24.8 84.9 25.08Q84.4 25.36 83.4 26.27Q82.4 27.18 82.15 27.02Q81.9 26.85 81.92 26.02Q81.94 25.2 81.67 24.84Q81.4 24.49 78.9 24.45Q76.4 24.42 75.8 24.92Q75.2 25.43 75.03 26.62Q74.85 27.8 74.28 29.77Q73.7 31.73 71.7 37.6Q69.7 43.47 69.39 44.03Q69.08 44.6 68.97 45.3Q68.85 46 68.92 46.3Q68.99 46.6 69.24 46.76Q69.5 46.92 71.95 46.97Q74.4 47.02 74.99 46.76Q75.57 46.5 75.78 45.9Q75.99 45.3 76.06 44.75Q76.14 44.2 77.68 40.15Q79.21 36.1 80.2 34.45Q81.19 32.8 81.79 32.08Q82.4 31.35 82.85 31.16Q83.3 30.98 83.55 31.19Q83.8 31.4 83.8 32Q83.8 32.6 82.99 34.5Q82.19 36.4 80.84 41.2Q79.49 46 79.58 46.3Q79.68 46.6 79.99 46.74Q80.3 46.89 82.4 46.91Q84.5 46.93 84.98 46.57Q85.46 46.2 87.32 40.95Q89.18 35.7 90.22 34Q91.26 32.3 91.83 31.84Q92.4 31.39 92.71 31.64Q93.01 31.9 93.04 32.45Q93.06 33 92.1 35.85Q91.14 38.7 90.8 41Q90.45 43.3 90.82 44.56Q91.2 45.82 91.65 46.29Q92.1 46.76 92.65 47.01Q93.2 47.26 94 47.35Q94.8 47.44 96.05 47.08Q97.3 46.71 98.46 45.76Q99.63 44.8 100.01 44.22Q100.4 43.64 100.85 43.45Q101.3 43.26 101.56 43.43Q101.83 43.6 102.11 44.41Q102.4 45.22 103.08 45.91Q103.76 46.6 105.03 46.97Q106.3 47.34 106.9 47.32Q107.5 47.3 108.35 47.03Q109.2 46.76 109.98 46.23Q110.76 45.7 111.08 45.23Q111.4 44.75 111.8 44.59Q112.2 44.43 112.45 44.54Q112.7 44.65 112.95 45.26Q113.2 45.86 113.65 46.34Q114.1 46.81 114.95 46.99Q115.8 47.18 116.6 47.13Q117.4 47.09 119 46.4Q120.6 45.7 121.6 44.78Q122.6 43.87 122.86 43.98Q123.12 44.1 124.12 45.35Q125.13 46.6 125.61 46.8Q126.1 46.99 127.7 47.2Q129.3 47.4 131.1 47.07Q132.9 46.73 133.8 46.12Q134.7 45.5 135.24 44.85Q135.78 44.2 136.29 43.15Q136.81 42.1 136.99 40.9Q137.17 39.7 137 38.15Q136.84 36.6 136.35 35.3Q135.86 34 135.03 32.43Q134.2 30.87 134.07 29.98Q133.94 29.1 134.17 28.78Q134.4 28.45 134.75 28.41Q135.1 28.37 135.4 28.53Q135.7 28.69 136.1 29.19Q136.5 29.7 137.05 29.79Q137.6 29.89 137.8 29.64Q138 29.4 138.55 27.55Q139.11 25.7 138.95 25.25Q138.8 24.8 138.2 24.43Q137.6 24.05 136.15 23.7Q134.7 23.36 133.8 23.37ZM112.18 29.51Q112.85 29.2 113.33 29.24Q113.8 29.29 114.3 29.59Q114.8 29.9 114.95 30.35Q115.11 30.8 115.05 31.4Q114.99 32 113.92 34.9Q112.84 37.8 112.25 38.65Q111.66 39.5 110.93 40.12Q110.2 40.74 109.65 40.77Q109.1 40.81 108.67 40.5Q108.23 40.2 108.12 39.7Q108 39.2 108.09 37.65Q108.18 36.1 108.67 34.65Q109.15 33.2 109.73 32.22Q110.3 31.23 110.9 30.52Q111.5 29.81 112.18 29.51ZM127.25 37.4Q128.36 34.7 128.78 34.75Q129.2 34.8 129.46 35.05Q129.73 35.3 130.29 36.75Q130.86 38.2 130.95 38.85Q131.03 39.5 130.85 40.55Q130.66 41.6 130.18 42.14Q129.7 42.68 129.15 42.67Q128.6 42.66 127.37 41.38Q126.13 40.1 127.25 37.4ZM153.7 8.84Q153.2 8.68 150.75 8.87Q148.3 9.06 147.95 9.19Q147.6 9.33 147.4 9.62Q147.2 9.9 145.06 18.2Q142.92 26.5 140.05 36.3Q137.19 46.1 137.29 46.42Q137.4 46.73 137.9 46.91Q138.4 47.09 140.4 47.13Q142.4 47.17 143.05 46.94Q143.7 46.71 144.03 45.01Q144.36 43.3 145.32 40.35Q146.28 37.4 147.25 35.55Q148.23 33.7 149.21 32.45Q150.2 31.2 150.7 30.98Q151.2 30.76 151.45 30.82Q151.7 30.89 151.9 31.14Q152.11 31.4 152.14 32.3Q152.18 33.2 150.77 37.4Q149.37 41.6 148.81 43.9Q148.25 46.2 148.38 46.45Q148.5 46.7 148.95 46.85Q149.4 46.99 151.55 46.89Q153.7 46.78 154.24 45.99Q154.79 45.2 155.36 43.7Q155.94 42.2 157.48 37.6Q159.02 33 159.45 31.05Q159.88 29.1 159.77 28Q159.66 26.9 159.29 26.1Q158.92 25.3 158.31 24.77Q157.7 24.24 157.25 24.07Q156.8 23.9 156.25 23.83Q155.7 23.77 155 23.9Q154.3 24.04 153.25 24.53Q152.2 25.03 151.3 25.75Q150.4 26.48 150.15 26.51Q149.9 26.55 149.76 26.43Q149.63 26.3 152.03 18.05Q154.43 9.8 154.31 9.4Q154.2 9 153.7 8.84Z"/>
+    <path id="js-bar" d="M147.7 52.75Q141.4 52.79 103 53.6Q64.6 54.41 51.25 54.55Q37.9 54.69 37.43 54.89Q36.96 55.1 36.65 56.1Q36.34 57.1 36.39 57.45Q36.44 57.8 36.87 58.18Q37.3 58.57 44.8 58.73Q52.3 58.89 58.25 59.05Q64.2 59.2 69.4 59.51Q74.6 59.83 113.5 60.48Q152.4 61.13 153.04 60.77Q153.69 60.4 154.48 57.15Q155.28 53.9 155.09 53.42Q154.9 52.94 154.45 52.82Q154 52.7 147.7 52.75Z"/>
+  </defs>
+</svg>
+
+<div class="pre" id="pre" aria-hidden="true">
+  <div class="pre-ghost"><span>Just smash · Just smash · Just smash · </span><span>Just smash · Just smash · Just smash · </span></div>
+  <div class="smash" id="smash">
+    <span class="sm-glow"></span>
+    <span class="sm-griddle"></span>
+    <svg class="sm-heat" viewBox="0 0 460 120" preserveAspectRatio="none"><path d="M70 118c-12-16 12-30 0-46s12-30 0-46"/><path d="M140 118c-12-16 12-30 0-46s12-30 0-46"/><path d="M320 118c-12-16 12-30 0-46s12-30 0-46"/><path d="M390 118c-12-16 12-30 0-46s12-30 0-46"/></svg>
+    <span class="sm-shadow"></span>
+    <svg class="sm-burst" viewBox="-100 -100 200 200"><polygon id="smBurst"/></svg>
+    <span class="sm-ball"></span>
+    <div class="sm-fx" id="smFx"></div>
+    <div class="sm-press"><span class="sm-trail"><i></i><i></i><i></i><i></i></span><span class="sm-handle"></span><span class="sm-plate"><svg class="sm-emb" viewBox="0 0 171 67"><use href="#js-j"/><use href="#js-dot"/><use href="#js-word"/></svg></span></div>
+    <span class="sm-word">Smash!</span>
+  </div>
+  <div class="pre-wave"><svg viewBox="0 0 2880 160" preserveAspectRatio="none"><path fill="#fdf3e6" d="M0 0H2880V70C2760 130 2640 130 2520 70S2280 10 2160 70 1920 130 1800 70 1560 10 1440 70 1200 130 1080 70 840 10 720 70 480 130 360 70 120 10 0 70Z"/></svg></div>
+</div>
+<div class="pre-logo" id="preLogo" aria-hidden="true">
+  <svg viewBox="0 0 171 67">
+    <defs>
+      <clipPath id="pl-clip"><use href="#js-j"/><use href="#js-dot"/><use href="#js-word"/><use href="#js-bar"/></clipPath>
+      <linearGradient id="pl-shine-g" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    </defs>
+    <circle class="pl-ring" cx="85.5" cy="33.5" r="40" fill="none" stroke="#e7c7a4" stroke-width="1.4"/>
+    <g class="pl-mark"><use href="#js-j"/><use href="#js-dot"/><use href="#js-word"/></g>
+    <use class="pl-bar" href="#js-bar"/>
+    <g clip-path="url(#pl-clip)"><rect class="pl-shine" x="-30" y="-10" width="26" height="90" fill="url(#pl-shine-g)"/></g>
+  </svg>
+</div>
+
+<header class="hero is-loading nav-white" id="hero" aria-roledescription="carousel" aria-label="J.Smash favourites">
+  <div class="hero-in">
+    <div class="stage" id="stage">
+
+      <svg class="bg" viewBox="0 0 1672 941" aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="red-field" gradientUnits="userSpaceOnUse" cx="744" cy="690" r="1070" gradientTransform="translate(0 -171) scale(1 1.15)">
+            <stop stop-color="#ae050a"/><stop offset=".45" stop-color="#990308"/><stop offset=".72" stop-color="#820107"/><stop offset="1" stop-color="#690105"/>
+          </radialGradient>
+          <linearGradient id="cream-field" gradientUnits="userSpaceOnUse" x1="0" y1="548" x2="234" y2="941">
+            <stop stop-color="#fef3e4"/><stop offset=".75" stop-color="#fcf0df"/><stop offset="1" stop-color="#fdf2e2"/>
+          </linearGradient>
+          <linearGradient id="back-field" gradientUnits="userSpaceOnUse" x1="0" y1="540" x2="0" y2="760">
+            <stop stop-color="#f6d9b9"/><stop offset="1" stop-color="#f0caa3"/>
+          </linearGradient>
+          <pattern id="grain" width="307" height="271" patternUnits="userSpaceOnUse"><image href="assets/grain.png" width="307" height="271"/></pattern>
+        </defs>
+        <rect x="-3000" y="-3000" width="7672" height="7000" fill="url(#red-field)"/>
+        <rect x="-3000" y="-3000" width="7672" height="7000" fill="url(#grain)" opacity=".22" style="mix-blend-mode:soft-light"/>
+      </svg>
+
+      <div class="glow" id="glow" aria-hidden="true"></div>
+      <div class="word par" id="word" aria-hidden="true"></div>
+
+      <svg class="wave" viewBox="0 0 1672 941" aria-hidden="true" focusable="false">
+        <path id="wave-back" fill="url(#back-field)" opacity=".9" d="M-3000 570H4672V4000H-3000Z"/>
+        <path id="wave-fill" fill="url(#cream-field)" d="M-3000 580H0C84 551 166 548 247 575C350 608 367 690 477 731C543 757 608 758 672 750C814 735 927 653 1073 659C1181 660 1228 690 1287 710C1378 740 1436 683 1514 669C1573 657 1630 669 1672 692H4672V4000H-3000Z"/>
+        <path id="wave-grain" fill="url(#grain)" opacity=".025" style="mix-blend-mode:multiply" d="M-3000 580H0C84 551 166 548 247 575C350 608 367 690 477 731C543 757 608 758 672 750C814 735 927 653 1073 659C1181 660 1228 690 1287 710C1378 740 1436 683 1514 669C1573 657 1630 669 1672 692H4672V4000H-3000Z"/>
+      </svg>
+
+      <!-- Hand-drawn doodles: a pair per product that draws itself in / out with each change -->
+      <svg class="marks" viewBox="0 0 1672 941" aria-hidden="true" focusable="false">
+        <g style="translate:calc(var(--mx) * -11px) calc(var(--my) * -11px)"><g class="dd-slot dd-a">
+          <g class="dd" data-v="0"><!-- burger -->
+            <path pathLength="1" d="M58 196C58 150 86 128 113 128C140 128 168 150 168 196Z"/>
+            <path pathLength="1" d="M92 158l7-4M112 149h8M133 157l7 4"/>
+            <path pathLength="1" d="M54 206H172Q180 206 180 214Q180 222 172 222H54Q46 222 46 214Q46 206 54 206Z"/>
+            <path pathLength="1" d="M60 230q9 9 18 0t18 0 18 0 18 0 18 0 18 0"/>
+            <path pathLength="1" d="M58 238H168Q168 260 146 260H80Q58 260 58 238Z"/>
+          </g>
+          <g class="dd" data-v="1"><!-- fries cup -->
+            <path pathLength="1" d="M86 180L78 120M102 180L100 106M118 180L124 110M134 180L144 124M150 180L162 138"/>
+            <path pathLength="1" d="M72 180L158 180L146 258L84 258Z"/>
+            <path pathLength="1" d="M76 208H154"/>
+            <path pathLength="1" d="M104 232q6-8 12 0t12 0"/>
+          </g>
+          <g class="dd" data-v="2"><!-- drumstick -->
+            <path pathLength="1" d="M150 132C188 132 196 182 164 204C148 215 128 212 118 200C104 184 110 140 150 132Z"/>
+            <path pathLength="1" d="M138 156l7 4M158 168l7 4M144 184l7 4M166 150l5 5"/>
+            <path pathLength="1" d="M120 200L90 230"/>
+            <circle pathLength="1" cx="81" cy="228" r="9"/><circle pathLength="1" cx="92" cy="241" r="9"/>
+          </g>
+        </g></g>
+        <g style="translate:calc(var(--mx) * -9px) calc(var(--my) * -9px)"><g class="dd-slot dd-b">
+          <g class="dd" data-v="0"><!-- pickle slice -->
+            <circle pathLength="1" cx="1446" cy="212" r="47"/>
+            <circle pathLength="1" cx="1446" cy="212" r="35"/>
+            <path pathLength="1" d="M1446 196v4M1460 204l-3 3M1460 220l-3-3M1446 228v-4M1432 220l3-3M1432 204l3 3"/>
+          </g>
+          <g class="dd" data-v="1"><!-- onion ring -->
+            <ellipse pathLength="1" cx="1446" cy="212" rx="52" ry="33" transform="rotate(-20 1446 212)"/>
+            <ellipse pathLength="1" cx="1446" cy="212" rx="31" ry="17" transform="rotate(-20 1446 212)"/>
+            <path pathLength="1" d="M1386 170l-9-6M1504 254l9 6M1502 168l10-5M1390 256l-10 4"/>
+          </g>
+          <g class="dd" data-v="2" transform="translate(1335 23)"><!-- lettuce leaf -->
+            <path pathLength="1" d="M89 226Q47 219 61 154Q68 149 83 169Q102 136 125 127Q126 145 139 152Q148 165 131 185Q151 176 173 180Q160 194 163 203Q152 220 119 226Z"/>
+            <path pathLength="1" d="M91 237Q96 194 137 145M94 231Q76 205 69 159M95 231Q125 218 162 185"/>
+          </g>
+        </g></g>
+      </svg>
+
+      <div class="seeds" id="seeds" aria-hidden="true"></div>
+
+      <p class="badge par"><span class="badge-in" id="badgeIn">Welcome to Just Smash</span></p>
+
+      <h1 class="title par" id="title">
+        <span class="sr-only" id="titleSr">No talk. Just smash.</span>
+        <span class="hl hl1" aria-hidden="true"><span class="hl-in"></span></span>
+        <span class="hl hl2" aria-hidden="true"><span class="hl-in"></span>
+          <!-- gold accent at the end of the line, one per product; it fires on the smash -->
+          <svg class="acc" viewBox="0 0 100 100" focusable="false">
+            <g class="ac ac-rays" data-v="0"><!-- Iconic: impact lines -->
+              <path class="ac-r" d="M14.2 77.7L37.1 28.6C40 20.8 28.3 16.6 25.5 24.3L11.5 76.7C10.9 78.5 13.5 79.4 14.2 77.7Z"/>
+              <path class="ac-r" d="M23.8 82.9L82.4 40.8C89.3 35 80.6 24.5 73.6 30.4L22 80.8C20.5 82 22.3 84.1 23.8 82.9Z"/>
+              <path class="ac-r" d="M29.9 93.2L91.8 87.2C99.9 85.7 97.8 73.5 89.6 75L29.4 90.5C27.6 90.8 28 93.5 29.9 93.2Z"/>
+              <circle class="ac-f" cx="63.4" cy="14.1" r="5"/>
+            </g>
+            <g class="ac ac-steam" data-v="1"><!-- Loaded Fries: steam curling off -->
+              <path class="ac-s" pathLength="1" d="M16 96c-11-12 11-21 0-33s11-21 0-33"/>
+              <path class="ac-s" pathLength="1" d="M45 96c-12-14 12-25 0-39s12-25 0-39"/>
+              <path class="ac-s" pathLength="1" d="M74 96c-10-11 10-19 0-29s10-19 0-29"/>
+            </g>
+            <g class="ac ac-crunch" data-v="2"><!-- Just Chicky: crunch sparkles -->
+              <path class="ac-f" d="M44 6C47 30 52 35 76 38C52 41 47 46 44 70C41 46 36 41 12 38C36 35 41 30 44 6Z"/>
+              <path class="ac-f" d="M84 60C85.6 71 87 72.4 98 74C87 75.6 85.6 77 84 88C82.4 77 81 75.6 70 74C81 72.4 82.4 71 84 60Z"/>
+              <circle class="ac-f" cx="22" cy="88" r="5.5"/>
+            </g>
+          </svg>
+        </span>
+      </h1>
+
+      <div class="sticker par" aria-hidden="true">
+        <div class="sticker-spin" id="stickerSpin">
+          <svg class="sticker-ring" viewBox="0 0 140 140">
+            <defs><path id="st-path" d="M70 70m-54 0a54 54 0 1 1 108 0a54 54 0 1 1-108 0"/></defs>
+            <circle cx="70" cy="70" r="40"/>
+            <text><textPath href="#st-path" textLength="337" lengthAdjust="spacing">SMASHED FRESH • NO TALK • JUST SMASH •</textPath></text>
+          </svg>
+        </div>
+        <svg class="sticker-j" viewBox="6 5 41 58"><use href="#js-j"/><use href="#js-dot"/></svg>
+      </div>
+
+      <div class="shadows" aria-hidden="true">
+        <div class="shadow" data-p="loaded"><i></i></div>
+        <div class="shadow" data-p="chicky"><i></i></div>
+        <div class="shadow" data-p="iconic"><i></i></div>
+      </div>
+
+      <div class="garnish" id="garnish" aria-hidden="true"></div>
+
+      <svg class="crumbs" viewBox="0 0 1672 941" aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="crumb-shadow"><stop stop-color="#4c1c07" stop-opacity=".69"/><stop offset=".5" stop-color="#653211" stop-opacity=".35"/><stop offset="1" stop-color="#5e2c0a" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g fill="url(#crumb-shadow)">
+          <ellipse cx="488" cy="775" rx="4" ry="1.62"/><ellipse cx="508" cy="833" rx="5" ry="2.16"/><ellipse cx="524" cy="855" rx="3.8" ry="1.51"/><ellipse cx="557" cy="897" rx="6" ry="2.7"/><ellipse cx="1127" cy="853" rx="5" ry="2.16"/><ellipse cx="1180" cy="822" rx="4" ry="1.62"/><ellipse cx="1205" cy="851" rx="4.5" ry="1.89"/><ellipse cx="1268" cy="860" rx="3.5" ry="1.35"/><ellipse cx="474" cy="805" rx="3.7" ry="1.46"/><ellipse cx="1274" cy="656" rx="3.6" ry="1.4"/><ellipse cx="1227" cy="622" rx="3.8" ry="1.51"/><ellipse cx="485" cy="447" rx="3.5" ry="1.35"/>
+        </g>
+        <g fill="#c97020">
+          <path d="M483 773l2.1-2.22 2.7-.54 2.1 3-2.7 2.4-4.2-.9Z"/><path d="M502 831l2.8-2.96 3.6-.72 2.8 4-3.6 3.2-5.6-1.2Z"/><path d="M519.2 853l1.96-2.07 2.52-.5 1.96 2.8-2.52 2.24-3.92-.84Z"/><path d="M550 895l3.5-3.7 4.5-.9 3.5 5-4.5 4-7-1.5Z"/><path d="M1121 851l2.8-2.96 3.6-.72 2.8 4-3.6 3.2-5.6-1.2Z"/><path d="M1175 820l2.1-2.22 2.7-.54 2.1 3-2.7 2.4-4.2-.9Z"/><path d="M1199.5 849l2.45-2.59 3.15-.63 2.45 3.5-3.15 2.8-4.9-1.05Z"/><path d="M1263.5 858l1.75-1.85 2.25-.45 1.75 2.5-2.25 2-3.5-.75Z"/><path d="M469.3 803l1.89-2 2.43-.49 1.89 2.7-2.43 2.16-3.78-.81Z"/><path d="M1269.4 654l1.82-1.92 2.34-.47 1.82 2.6-2.34 2.08-3.64-.78Z"/><path d="M1222.2 620l1.96-2.07 2.52-.5 1.96 2.8-2.52 2.24-3.92-.84Z"/><path d="M480.5 445l1.75-1.85 2.25-.45 1.75 2.5-2.25 2-3.5-.75Z"/>
+        </g>
+        <g fill="#f5a63d">
+          <circle cx="486" cy="771.86" r="1.41"/><circle cx="506" cy="829.48" r="1.88"/><circle cx="522" cy="851.94" r="1.32"/><circle cx="555" cy="893.1" r="2.35"/><circle cx="1125" cy="849.48" r="1.88"/><circle cx="1178" cy="818.86" r="1.41"/><circle cx="1203" cy="847.67" r="1.65"/><circle cx="1266" cy="857.05" r="1.17"/><circle cx="472" cy="801.97" r="1.27"/><circle cx="1272" cy="653.01" r="1.22"/><circle cx="1225" cy="618.94" r="1.32"/><circle cx="483" cy="444.05" r="1.17"/>
+        </g>
+      </svg>
+
+      <div class="fx" id="fx" aria-hidden="true"></div>
+      <div class="embers" id="embers" aria-hidden="true"></div>
+
+      <div class="products" id="products">
+        <div class="prod" data-p="loaded"><div class="bob"><div class="tilt"><img src="assets/loaded-fries-photo.png" alt="Loaded Fries" width="637" height="680" draggable="false"></div></div></div>
+        <div class="prod" data-p="chicky"><div class="bob"><div class="tilt"><img src="assets/just-chicky-photo.png" alt="Just Chicky sandwich" width="830" height="620" draggable="false"></div></div></div>
+        <div class="prod" data-p="iconic"><div class="bob"><div class="tilt"><img src="assets/iconic-photo.png" alt="Iconic double smashed burger" width="589" height="521" draggable="false"></div></div></div>
+      </div>
+
+      <div class="fg" id="fg" aria-hidden="true"></div>
+
+      <div class="mobile-ui">
+        <div class="chips" role="group" aria-label="Choose a featured product">
+          <button class="chip" data-go="0">Iconic</button>
+          <button class="chip" data-go="1">Loaded Fries</button>
+          <button class="chip" data-go="2">Just Chicky</button>
+        </div>
+        <div class="mcta">
+          <a class="ghost" href="#">View menu</a>
+          <a class="solid" href="#contact">Contact us
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.2 3H9v4.8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="edges" aria-hidden="true"></div>
+
+    <div class="strip" id="strip" role="group" aria-label="Choose a featured product">
+      <button class="sw-card" data-go="0" aria-label="Show Iconic"><img class="sw-img" src="assets/iconic-photo.png" alt=""><span class="sw-meta"><i>01</i><b>Iconic</b></span><span class="sw-bar"><span></span></span></button>
+      <button class="sw-card" data-go="1" aria-label="Show Loaded Fries"><img class="sw-img" src="assets/loaded-fries-photo.png" alt=""><span class="sw-meta"><i>02</i><b>Loaded Fries</b></span><span class="sw-bar"><span></span></span></button>
+      <button class="sw-card" data-go="2" aria-label="Show Just Chicky"><img class="sw-img" src="assets/just-chicky-photo.png" alt=""><span class="sw-meta"><i>03</i><b>Just Chicky</b></span><span class="sw-bar"><span></span></span></button>
+    </div>
+
+    <div class="cur" id="cur" aria-hidden="true">
+      <div class="cur-body">
+        <svg class="cur-ring" viewBox="0 0 128 128">
+          <defs><path id="cur-path" d="M64 64m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0"/></defs>
+          <text><textPath href="#cur-path" textLength="294" lengthAdjust="spacing">ORDER NOW • ORDER NOW • </textPath></text>
+        </svg>
+        <span class="cur-core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+      <i class="cur-dot"></i>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="Main">
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path class="b1" d="M4 7h16"/><path class="b2" d="M4 12h16"/><path class="b3" d="M4 17h16"/></svg>
+      </button>
+      <div class="nav-side nav-side-l" id="navL">
+        <ul class="nav-l">
+          <li class="has-mega" id="megaItem">
+            <a class="lnk lnk-menu" href="#" aria-haspopup="true" aria-expanded="false" aria-controls="mega">
+              <span class="menu-ic nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="mi-top" d="M4.8 10.2C4.8 6.7 8 4.4 12 4.4s7.2 2.3 7.2 5.8Z"/><path class="mi-mid" d="M4.2 13.8c1.3-1.1 2.6 1.1 3.9 0s2.6 1.1 3.9 0 2.6 1.1 3.9 0 2.6 1.1 3.9 0"/><path class="mi-bot" d="M5.2 17.2h13.6c0 1.5-1.2 2.6-2.6 2.6H7.8c-1.4 0-2.6-1.1-2.6-2.6Z"/></svg></span>
+              <span class="roll"><span data-t="Menu">Menu</span></span><svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></a>
+            <div class="mega" id="mega">
+              <a class="tile" href="#"><span class="tile-img"><img src="assets/iconic-photo.png" alt=""></span><b>Burgers</b><small>Double pure-beef smash</small></a>
+              <a class="tile" href="#"><span class="tile-img"><img src="assets/just-chicky-photo.png" alt=""></span><b>Chicken</b><small>Just Chicky, wraps &amp; strips</small></a>
+              <a class="tile" href="#"><span class="tile-img"><img src="assets/loaded-fries-photo.png" alt=""></span><b>Fries &amp; sides</b><small>Loaded, cheese &amp; animal fries</small></a>
+              <a class="tile" href="#"><span class="tile-img two"><img src="assets/mayo.png" alt=""><img src="assets/sauce.png" alt=""></span><b>Sauces</b><small>Iconic, smoked, ranch &amp; more</small></a>
+              <a class="deal" href="#">
+                <span class="deal-k">Bundles</span>
+                <b>Save up to<br>EGP 200</b>
+                <span class="deal-cta">See bundles <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5"/></svg></span>
+                <svg class="deal-j" viewBox="6 5 41 58" aria-hidden="true"><use href="#js-j"/><use href="#js-dot"/></svg>
+              </a>
+            </div>
+          </li>
+          <li><a class="lnk lnk-deals" href="#deals"><span class="deal-ic nav-ico" aria-hidden="true"><svg viewBox="-1 -1 26 26"><path class="dz" d="M12 2.3Q15.39 -0.65 16.85 3.6Q21.26 2.74 20.4 7.15Q24.65 8.61 21.7 12Q24.65 15.39 20.4 16.85Q21.26 21.26 16.85 20.4Q15.39 24.65 12 21.7Q8.61 24.65 7.15 20.4Q2.74 21.26 3.6 16.85Q-0.65 15.39 2.3 12Q-0.65 8.61 3.6 7.15Q2.74 2.74 7.15 3.6Q8.61 -0.65 12 2.3Z"/><path class="pc" d="M15.2 8.8 8.8 15.2"/><circle class="pc" cx="9.1" cy="9.1" r="1.5"/><circle class="pc" cx="14.9" cy="14.9" r="1.5"/></svg></span><span class="roll"><span data-t="Deals">Deals</span></span></a></li>
+          <li><a class="lnk lnk-branches" href="#branches"><span class="pin-ic nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span><span class="roll"><span data-t="Branches">Branches</span></span></a></li>
+        </ul>
+        <span class="nav-ink" id="navInk" aria-hidden="true"></span>
+      </div>
+      <a class="logo" id="navLogo" href="#" aria-label="J.Smash home">
+        <svg viewBox="0 0 171 67" aria-hidden="true"><use href="#js-j"/><use href="#js-dot"/><use href="#js-word"/><use href="#js-bar"/></svg>
+      </a>
+      <div class="nav-side nav-side-r">
+        <div class="has-search" id="searchItem">
+          <button class="icon-btn search-btn" type="button" id="searchBtn" aria-label="Search the menu" aria-haspopup="true" aria-expanded="false" aria-controls="smega"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.3 4.3"/></svg></span></button>
+          <div class="smega" id="smega" role="search">
+            <label class="sm-field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.3 4.3"/></svg>
+              <input type="search" id="sInput" placeholder="Search burgers, fries, chicken…" autocomplete="off" aria-label="Search the menu">
+              <kbd>Esc</kbd>
+            </label>
+            <div class="sm-tags"><span>Popular</span><button type="button">Iconic</button><button type="button">Loaded fries</button><button type="button">Chicken</button><button type="button">Sauce</button></div>
+            <div class="sm-head"><span id="sCount">Top picks</span></div>
+            <div class="sm-res" id="sRes">
+              <a class="sr" href="#" data-k="iconic burger burgers beef double smash smashed cheese"><span class="sr-img"><img src="assets/iconic-photo.png" alt=""></span><span class="sr-t"><b>Iconic</b><small>Double smashed beef, melted cheese</small></span><i>Burger</i></a>
+              <a class="sr" href="#" data-k="loaded fries chips sides caramelized onions sauce"><span class="sr-img"><img src="assets/loaded-fries-photo.png" alt=""></span><span class="sr-t"><b>Loaded Fries</b><small>Golden fries, onions, house sauce</small></span><i>Sides</i></a>
+              <a class="sr" href="#" data-k="just chicky chicken crispy sandwich mayo"><span class="sr-img"><img src="assets/just-chicky-photo.png" alt=""></span><span class="sr-t"><b>Just Chicky</b><small>Crispy chicken, creamy mayo</small></span><i>Chicken</i></a>
+              <a class="sr" href="#" data-k="sauce sauces dip mayo iconic smoked ranch"><span class="sr-img"><img src="assets/mayo.png" alt=""></span><span class="sr-t"><b>Signature sauces</b><small>Iconic, smoked, ranch &amp; more</small></span><i>Sauce</i></a>
+            </div>
+            <p class="sm-empty" id="sEmpty" hidden>Nothing smashed under that name yet. Try “fries” or “chicken”.</p>
+          </div>
+        </div>
+        <a class="icon-btn" href="#cart" aria-label="Cart, 2 items"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span><b class="cart-n" aria-hidden="true">2</b></a>
+        <a class="pill p-order p-cta" href="#contact"><span class="roll"><span data-t="Contact us">Contact us</span></span><span class="pill-ic nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.5h3.2l1.8 4.6-2.2 1.4a11.5 11.5 0 0 0 6.2 6.2l1.4-2.2 4.6 1.8v3.2a2 2 0 0 1-2.1 2A16.5 16.5 0 0 1 3.5 5.6a2 2 0 0 1 2-2.1Z"/></svg></span></a>
+      </div>
+      <span class="nav-rule" aria-hidden="true"></span>
+      <div class="nav-drop" id="nav-drop">
+        <div class="drop-cats">
+          <a href="#"><img src="assets/iconic-photo.png" alt="">Burgers</a>
+          <a href="#"><img src="assets/just-chicky-photo.png" alt="">Chicken</a>
+          <a href="#"><img src="assets/loaded-fries-photo.png" alt="">Fries</a>
+          <a href="#"><img src="assets/mayo.png" alt="">Sauces</a>
+        </div>
+        <div class="drop-links"><a href="#deals">Deals</a><a href="#branches">Branches</a></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const hero = $('#hero'), stage = $('#stage');
+  const params = new URLSearchParams(location.search);
+  const STILL = params.has('still');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const CALM = STILL || RM;
+  const AUTO_MS = 6000;
+  hero.style.setProperty('--D', AUTO_MS + 'ms');
+  if (CALM) hero.classList.add('is-calm');
+  if (params.get('nav') === 'clear') hero.classList.remove('nav-white');   // transparent nav variant
+  // demo build: links, buttons and cards look and feel live but never leave the page
+  document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a'); if (a) e.preventDefault(); }, true);
+
+  /* ── Products ── */
+  const PRODUCTS = {
+    iconic: { name: 'Iconic',       bob: 5.2, glow: 'rgba(255,128,48,.34)' },
+    loaded: { name: 'Loaded Fries', bob: 4.6, glow: 'rgba(255,186,64,.30)' },
+    chicky: { name: 'Just Chicky',  bob: 5.8, glow: 'rgba(255,150,40,.33)' },
+  };
+  const ASPECT_P = { iconic: 521 / 589, loaded: 680 / 637, chicky: 620 / 830 };
+  const CENTER = {
+    iconic: { g: [551, 337, 589, 521, 0],       sh: [842, 872, 286, 43, -5] },
+    loaded: { g: [590, 338, 478, 510.267, -9],  sh: [831, 864, 244, 40, -7] },
+    chicky: { g: [527, 345, 625, 466.867, -6],  sh: [839, 856, 300, 47, -5] },
+  };
+  const SIDE_W = { iconic: 450, loaded: 400, chicky: 470 };
+  const SIDE_BOTTOM = 800, SIDE_SHOW = .58;
+  const ORDER = [['loaded', 'iconic', 'chicky'], ['chicky', 'loaded', 'iconic'], ['iconic', 'chicky', 'loaded']];
+  const slotOf = (vi, p) => ORDER[vi].indexOf(p);
+
+  function geom(p, slot) {
+    if (slot === 1) {
+      const [x, y, w, h, r] = CENTER[p].g;
+      return { x, y, w, h, r, ax: 0, sh: CENTER[p].sh };
+    }
+    const w = SIDE_W[p], h = w * ASPECT_P[p], left = slot === 0;
+    const x = left ? -(1 - SIDE_SHOW) * w : 1672 - SIDE_SHOW * w;
+    const y = SIDE_BOTTOM - h;
+    return { x, y, w, h, r: left ? -6 : 6, ax: left ? -1 : 1, sh: [x + w / 2 + (left ? 14 : -14), SIDE_BOTTOM + .03 * w, .5 * w, .085 * w, left ? -3 : 3] };
+  }
+
+  /* ── Floating ingredients: [cut-out, x, y, w, rotation, owner, plane]
+        plane: 'm' sharp mid-ground · 'b' small & soft in the background
+        The front plane (big, out of focus, in front of the products) is FRONT below. ── */
+  const ASPECT_G = {
+    'pickle-left': 79 / 113, 'pickle-right': 80 / 97, 'sauce': 48 / 61, 'lettuce': 200 / 330,
+    'fry-right': 127 / 165, 'onion-left': 84 / 121, 'onion-bottom': 81 / 108, 'crunch': 131 / 208, 'mayo': 125 / 197,
+  };
+  const GARNISH = [
+    [ // 01 · Iconic
+      ['pickle-left', 451, 540, 85, -4, 'iconic'], ['pickle-right', 1100, 392, 96, 0, 'iconic'], ['sauce', 482, 453, 51, 12, 'iconic'], ['lettuce', 1117, 629, 73, 21, 'iconic'],
+      ['fry-right', 200, 318, 99, -13, 'loaded'], ['onion-left', 318, 362, 70, -12, 'loaded'],
+      ['lettuce', 1400, 346, 75, -14, 'chicky'], ['crunch', 1490, 378, 39, 22, 'chicky'], ['mayo', 1328, 398, 52, 10, 'chicky'],
+      ['pickle-right', 1290, 205, 44, 18, 'iconic', 'b'], ['sauce', 522, 100, 28, -20, 'iconic', 'b'], ['crunch', 392, 450, 34, 30, 'iconic', 'b'],
+    ],
+    [ // 02 · Loaded Fries
+      ['fry-right', 484, 423, 128, 30, 'loaded'], ['fry-right', 1050, 369, 153, -9, 'loaded'], ['onion-left', 493, 558, 112, -23, 'loaded'],
+      ['onion-bottom', 1065, 545, 113, -8, 'loaded'], ['sauce', 505, 688, 51, 12, 'loaded'], ['sauce', 1141, 508, 49, -18, 'loaded'],
+      ['lettuce', 178, 376, 73, 21, 'chicky'], ['crunch', 270, 410, 40, 13, 'chicky'], ['mayo', 330, 366, 46, -15, 'chicky'],
+      ['pickle-left', 1312, 436, 62, 4, 'iconic'], ['pickle-right', 1440, 322, 68, -22, 'iconic'],
+      ['lettuce', 1282, 212, 54, -12, 'loaded', 'b'], ['pickle-left', 515, 98, 40, 20, 'loaded', 'b'], ['crunch', 402, 472, 30, 10, 'loaded', 'b'],
+    ],
+    [ // 03 · Just Chicky
+      ['lettuce', 478, 421, 110, 13, 'chicky'], ['lettuce', 1152, 486, 92, -30, 'chicky'], ['mayo', 1112, 406, 78, -17, 'chicky'], ['mayo', 480, 650, 55, 16, 'chicky'],
+      ['crunch', 464, 559, 57, -21, 'chicky'], ['crunch', 1134, 643, 47, 26, 'chicky'], ['crunch', 1228, 579, 29, -5, 'chicky'],
+      ['pickle-left', 190, 344, 77, 10, 'iconic'], ['pickle-right', 322, 378, 56, -13, 'iconic'],
+      ['fry-right', 1432, 300, 102, -14, 'loaded'], ['onion-bottom', 1346, 372, 70, -20, 'loaded'],
+      ['fry-right', 1286, 206, 60, -25, 'chicky', 'b'], ['onion-bottom', 520, 94, 40, 15, 'chicky', 'b'], ['pickle-right', 392, 472, 34, 20, 'chicky', 'b'],
+    ],
+  ];
+  // big, out-of-focus pieces right in front of the camera, one pair per product
+  const FRONT = [
+    [['lettuce', 232, 772, 200, 18], ['pickle-left', 1262, 806, 150, -30]],
+    [['fry-right', 226, 790, 205, 32], ['onion-left', 1266, 806, 150, -15]],
+    [['crunch', 236, 798, 165, 20], ['lettuce', 1246, 782, 200, -24]],
+  ];
+
+  /* ── Elements ── */
+  const prodEl = {}, shEl = {};
+  $$('.prod').forEach(el => prodEl[el.dataset.p] = el);
+  $$('.shadow').forEach(el => shEl[el.dataset.p] = el);
+  const glow = $('#glow'), stickerSpin = $('#stickerSpin'), wordEl = $('#word');
+  const U = () => stage.offsetWidth / 1672;
+  const setVars = (el, o) => { for (const k in o) el.style.setProperty('--' + k, o[k]); };
+  for (const p in PRODUCTS) { setVars(prodEl[p], { bd: PRODUCTS[p].bob + 's' }); setVars(shEl[p], { bd: PRODUCTS[p].bob + 's' }); }
+
+  function makeG(parent, [src, x, y, w, r, owner, plane], vi, k, front) {
+    const h = w * ASPECT_G[src];
+    const s = owner ? slotOf(vi, owner) : 1;
+    const el = document.createElement('div');
+    el.className = 'g par' + (plane === 'b' ? ' back' : '');
+    setVars(el, {
+      x, y, w, h: h.toFixed(3), r, ax: s === 0 ? -1 : s === 2 ? 1 : 0,
+      d: front ? 22 + k * 4 : plane === 'b' ? 3 + (k % 3) : 8 + ((k * 5 + vi * 3) % 8),
+      fd: (4.2 + ((k * 0.73 + vi * 0.41) % 2.6)).toFixed(2) + 's',
+      fdel: (-((k * 1.3 + vi) % 4)).toFixed(2) + 's',
+    });
+    el.innerHTML = `<div class="gi"><img src="assets/${src}.png" alt="" draggable="false"></div>`;
+    parent.appendChild(el);
+    return { el, gi: el.firstElementChild, cx: x + w / 2, cy: y + h / 2, r, owner, front };
+  }
+  const gWrap = $('#garnish'), fgWrap = $('#fg');
+  const gSets = GARNISH.map((set, vi) => set.map((g, k) => makeG(gWrap, g, vi, k, false)));
+  const fSets = FRONT.map((set, vi) => set.map((g, k) => makeG(fgWrap, [...g, null, 'f'], vi, k, true)));
+
+  /* ── Layout ── */
+  function place(p, vi, instant) {
+    const slot = slotOf(vi, p), g = geom(p, slot);
+    const [cx, cy, rx, ry, sr] = g.sh;
+    const el = prodEl[p], sh = shEl[p];
+    if (instant) { el.classList.add('no-tr'); sh.classList.add('no-tr'); }
+    setVars(el, { x: g.x, y: g.y, w: g.w, h: g.h, r: g.r, ax: g.ax, d: slot === 1 ? 4 : 6, amp: slot === 1 ? -9 : -6 });
+    setVars(sh, { cx, cy, rx, ry, r: sr, ax: g.ax, d: slot === 1 ? 4 : 6 });
+    el.classList.toggle('is-center', slot === 1);
+    sh.classList.toggle('is-center', slot === 1);
+    el.style.zIndex = slot === 1 ? 3 : 2;
+    el.dataset.slot = slot;
+    if (slot === 1) glow.style.setProperty('--gc', PRODUCTS[p].glow);
+    if (instant) { el.offsetWidth; el.classList.remove('no-tr'); sh.classList.remove('no-tr'); }
+  }
+  function towardOwner(g, vi, k) {
+    const o = geom(g.owner || ORDER[vi][1], slotOf(vi, g.owner || ORDER[vi][1]));
+    const dx = (o.x + o.w / 2 - g.cx) * k, dy = (o.y + o.h / 2 - g.cy) * k;
+    const a = -g.r * Math.PI / 180, u = U();
+    return [(dx * Math.cos(a) - dy * Math.sin(a)) * u, (dx * Math.sin(a) + dy * Math.cos(a)) * u];
+  }
+  function garnishIn(vi, delay, dir = 1) {
+    gSets[vi].forEach((g, k) => {
+      g.el.classList.add('on');
+      if (CALM) return;
+      const [tx, ty] = towardOwner(g, vi, 0.82);
+      g.gi.animate([
+        { transform: `translate(${tx}px, ${ty}px) scale(.15) rotate(${(k % 2 ? 1 : -1) * 70}deg)`, opacity: 0 },
+        { opacity: 1, offset: .3 },
+        { transform: 'none', opacity: 1 },
+      ], { duration: 860, delay: delay + k * 38, easing: 'cubic-bezier(.18,1.25,.4,1)', fill: 'backwards' });
+    });
+    // the out-of-focus front pieces sweep in from the side the products come from
+    fSets[vi].forEach((g, k) => {
+      g.el.classList.add('on');
+      if (CALM) return;
+      const u = U();
+      g.gi.animate([
+        { transform: `translate(${-dir * 340 * u}px, ${60 * u}px) rotate(${-dir * 40}deg) scale(.8)`, opacity: 0 },
+        { transform: 'none', opacity: 1 },
+      ], { duration: 1100, delay: delay + 120 + k * 90, easing: 'cubic-bezier(.16,.9,.25,1)', fill: 'backwards' });
+    });
+  }
+  function garnishOut(vi, dir = 1) {
+    gSets[vi].forEach((g, k) => {
+      if (!g.el.classList.contains('on')) return;
+      g.el.classList.remove('on');
+      if (CALM) return;
+      const [tx, ty] = towardOwner(g, vi, 0.45);
+      g.gi.animate([
+        { transform: 'none', opacity: 1 },
+        { transform: `translate(${tx}px, ${ty}px) scale(.35) rotate(${(k % 2 ? -1 : 1) * 40}deg)`, opacity: 0 },
+      ], { duration: 380, delay: k * 14, easing: 'cubic-bezier(.55,0,.8,.35)', fill: 'backwards' });
+    });
+    fSets[vi].forEach((g, k) => {
+      if (!g.el.classList.contains('on')) return;
+      g.el.classList.remove('on');
+      if (CALM) return;
+      const u = U();
+      g.gi.animate([
+        { transform: 'none', opacity: 1 },
+        { transform: `translate(${dir * 380 * u}px, ${30 * u}px) rotate(${dir * 35}deg)`, opacity: 0 },
+      ], { duration: 650, delay: k * 50, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'backwards' });
+    });
+  }
+
+  /* ── Giant outlined product name behind the products ── */
+  function showWord(vi, dir, instant) {
+    const name = PRODUCTS[ORDER[vi][1]].name;
+    const fs = Math.min(230, 1480 / (name.length * .78));
+    const sp = document.createElement('span');
+    sp.textContent = name;
+    sp.style.setProperty('--fs', fs.toFixed(1));
+    const old = [...wordEl.children];
+    wordEl.appendChild(sp);
+    if (instant || CALM) { old.forEach(o => o.remove()); return; }
+    const u = U();
+    sp.animate([{ transform: `translateX(${-dir * 260 * u}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 1100, delay: 200, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+    old.forEach(o => o.animate([{ transform: 'none', opacity: 1 }, { transform: `translateX(${dir * 260 * u}px)`, opacity: 0 }], { duration: 700, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'forwards' }).finished.then(() => o.remove(), () => o.remove()));
+  }
+
+  /* ── Headline: its own line for every hero product ──
+     Line one flips over letter by letter like a split-flap board; line two drops in
+     letter by letter and slams down with the product. The badge tips over and back. */
+  const HEAD = {
+    iconic: { badge: 'Welcome to Just Smash',   l1: 'No talk.',   l2: 'Just smash.' },
+    loaded: { badge: 'Loaded to the last fry',  l1: 'No limits.', l2: 'Just loaded.' },
+    chicky: { badge: 'Crunch you can hear',     l1: 'No fuss.',   l2: 'Just chicky.' },
+  };
+  const hlLines = $$('.hl'), hlIn = hlLines.map(l => $('.hl-in', l)), badgeIn = $('#badgeIn'), titleSr = $('#titleSr');
+  let headTok = 0;
+  function letters(el, text) {
+    el.textContent = '';
+    for (const c of text) {
+      const s = document.createElement('span');
+      s.className = 'ch';
+      s.textContent = c === ' ' ? ' ' : c;
+      el.appendChild(s);
+    }
+  }
+  // shrink a line only if it would run wider than its design slot (--mw)
+  function fitLine(i) {
+    const el = hlIn[i], cs = getComputedStyle(hlLines[i]);
+    el.style.setProperty('--fit', 1);
+    const unit = parseFloat(getComputedStyle(el).fontSize) / parseFloat(cs.getPropertyValue('--fs0'));
+    const w = el.scrollWidth, mw = parseFloat(cs.getPropertyValue('--mw')) * unit;
+    if (w && unit) el.style.setProperty('--fit', Math.min(1, mw / w).toFixed(4));
+  }
+  const fitAll = () => hlIn.forEach((_, i) => fitLine(i));
+  const MID = '50% 55%';   // flips turn about the middle of the letter; slams squash on the baseline
+  const FLIP_IN = [
+    { transform: 'rotateX(-100deg)', opacity: 0, transformOrigin: MID },
+    { opacity: 1, offset: .2, transformOrigin: MID },
+    { transform: 'rotateX(16deg)', offset: .62, transformOrigin: MID },
+    { transform: 'rotateX(-5deg)', offset: .84, transformOrigin: MID },
+    { transform: 'none', opacity: 1, transformOrigin: MID },
+  ];
+  const SLAM_IN = [
+    { transform: 'translateY(-1.15em) scale(.86,1.32)', opacity: 0, easing: 'cubic-bezier(.55,0,.9,.5)' },
+    { opacity: 1, offset: .22 },
+    { transform: 'translateY(0) scale(1.26,.66)', offset: .52, easing: 'cubic-bezier(.2,.8,.3,1)' },
+    { transform: 'translateY(-.06em) scale(.95,1.08)', offset: .76 },
+    { transform: 'none', opacity: 1 },
+  ];
+  function lineIn(i, delay, dir) {
+    const ch = [...hlIn[i].children], n = ch.length;
+    ch.forEach((c, k) => {
+      const o = dir < 0 ? n - 1 - k : k;
+      if (i === 0) c.animate(FLIP_IN, { duration: 620, delay: delay + o * 26, easing: 'cubic-bezier(.3,.6,.35,1)', fill: 'backwards' });
+      else c.animate(SLAM_IN, { duration: 560, delay: delay + o * 24, fill: 'backwards' });
+    });
+  }
+  // the gold accent at the end of line two: impact lines · steam · crunch sparkles
+  const accs = $$('.acc .ac');
+  function accentOff(animate) {
+    accs.forEach(g => {
+      if (!g.classList.contains('on')) return;
+      g.classList.remove('on');
+      if (animate && !CALM) g.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.2) rotate(-35deg)' }], { duration: 240, easing: 'cubic-bezier(.55,0,.85,.35)' });
+    });
+  }
+  function accentOn(vi, animate) {
+    accs.forEach(g => {
+      const on = +g.dataset.v === vi;
+      g.classList.toggle('on', on);
+      if (!on || !animate || CALM) return;
+      g.animate([{ transform: 'scale(.5)' }, { transform: 'scale(1.14)', offset: .42 }, { transform: 'none' }], { duration: 480, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      $$('.ac-s', g).forEach((s, k) => s.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 380, delay: k * 70, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' }));
+      // impact lines shoot out from the end of the word
+      $$('.ac-r', g).forEach((s, k) => s.animate([{ transform: 'scale(0)', opacity: 0 }, { opacity: 1, offset: .2 }, { transform: 'scale(1.18)', offset: .5 }, { transform: 'none', opacity: 1 }], { duration: 460, delay: k * 55, easing: 'cubic-bezier(.15,.85,.3,1)', fill: 'backwards' }));
+      $$('.ac-f', g).forEach((s, k) => s.animate([{ transform: 'scale(0) rotate(-90deg)' }, { transform: 'scale(1.3) rotate(10deg)', offset: .55 }, { transform: 'none' }], { duration: 540, delay: 50 + k * 90, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' }));
+    });
+  }
+  function setHeadline(vi, dir = 1, mode = 'change') {
+    const h = HEAD[ORDER[vi][1]], tok = ++headTok, lines = [h.l1, h.l2];
+    titleSr.textContent = h.l1 + ' ' + h.l2;
+    badgeIn.getAnimations().forEach(a => a.cancel());
+    hlIn.forEach(el => el.getAnimations({ subtree: true }).forEach(a => a.cancel()));
+    if (mode !== 'change' || CALM) {
+      badgeIn.textContent = h.badge;
+      lines.forEach((t, i) => letters(hlIn[i], t));
+      fitAll();
+      if (mode === 'intro' && !CALM) { lineIn(0, 420, 1); lineIn(1, 860, 1); accentOff(false); }   // the accent waits for the smash
+      else accentOn(vi, false);
+      return;
+    }
+    accentOff(true);
+    // badge: tips back on its bottom edge, comes round with the new line
+    badgeIn.animate([{ transform: 'none' }, { transform: 'rotateX(90deg)' }], { duration: 220, easing: 'cubic-bezier(.55,0,.9,.4)', fill: 'forwards' });
+    setTimeout(() => {
+      if (tok !== headTok) return;
+      badgeIn.getAnimations().forEach(a => a.cancel());
+      badgeIn.textContent = h.badge;
+      badgeIn.animate([{ transform: 'rotateX(-90deg)' }, { transform: 'rotateX(14deg)', offset: .6 }, { transform: 'none' }], { duration: 560, easing: 'cubic-bezier(.25,.7,.35,1)' });
+    }, 240);
+    // old letters flip away, sweeping in the direction the products travel
+    hlIn.forEach((el, i) => {
+      const ch = [...el.children], n = ch.length;
+      ch.forEach((c, k) => {
+        const o = dir < 0 ? n - 1 - k : k;
+        c.animate([{ transform: 'none', opacity: 1, transformOrigin: MID }, { transform: 'translateY(-.08em) rotateX(96deg)', opacity: 0, transformOrigin: MID }],
+          { duration: 230, delay: i * 40 + o * 11, easing: 'cubic-bezier(.55,0,.85,.35)', fill: 'forwards' });
+      });
+    });
+    setTimeout(() => {
+      if (tok !== headTok) return;
+      lines.forEach((t, i) => letters(hlIn[i], t));
+      fitAll();
+      lineIn(0, 0, dir);
+      lineIn(1, 140, dir);
+    }, 400);
+  }
+  if (document.fonts) document.fonts.ready.then(fitAll);
+
+  /* ── Background doodles: a pair per hero product that draws itself in and rubs itself out ── */
+  const doodles = $$('.marks .dd');
+  function setDoodles(vi, animate) {
+    doodles.forEach(g => {
+      const on = +g.dataset.v === vi;
+      if (on === g.classList.contains('on')) return;
+      g.classList.toggle('on', on);
+      if (!animate || CALM) return;
+      const strokes = $$('path,circle,ellipse', g);
+      strokes.forEach((s, k) => {
+        s.getAnimations().forEach(a => a.cancel());
+        if (on) s.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 720, delay: 420 + k * 120, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'backwards' });
+        else s.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: -1 }], { duration: 360, delay: k * 45, easing: 'cubic-bezier(.55,0,.8,.4)' });
+      });
+    });
+  }
+
+  /* ── The "smash" on landing ── */
+  const fx = $('#fx');
+  const CRUMB_COLORS = ['#c97020', '#f5a63d', '#e0952f', '#b85f19', '#f3c26b'];
+  function smash(p) {
+    if (CALM) return;
+    prodEl[p].querySelector('img').animate([{ transform: 'scale(1,1)' }, { transform: 'scale(1.055,.925)', offset: .28 }, { transform: 'scale(.985,1.025)', offset: .62 }, { transform: 'scale(1,1)' }], { duration: 600, easing: 'ease-out' });
+    shEl[p].animate([{ transform: 'scale(1)' }, { transform: 'scale(1.1,1.15)', offset: .28 }, { transform: 'scale(1)' }], { duration: 600, easing: 'ease-out' });
+    // the headline flinches under the impact
+    hlLines.forEach((l, i) => l.animate([{ transform: 'none' }, { transform: 'scale(1.02,.86)', offset: .28 }, { transform: 'scale(.994,1.04)', offset: .62 }, { transform: 'none' }], { duration: 560, delay: i ? 0 : 50, easing: 'ease-out' }));
+    accentOn(ORDER.findIndex(o => o[1] === p), true);   // and the gold accent fires
+    glow.animate([{ opacity: .8 }, { opacity: 1, offset: .2 }, { opacity: .8 }], { duration: 900, easing: 'ease-out' });
+    const u = U();
+    stage.animate([{ transform: 'none' }, { transform: `translateY(${3 * u}px)`, offset: .25 }, { transform: `translateY(${-1.5 * u}px)`, offset: .6 }, { transform: 'none' }], { duration: 320, easing: 'ease-out' });
+    const g = geom(p, 1), base = g.y + g.h * .93;
+    for (let i = 0; i < 14; i++) {
+      const s = 4 + Math.random() * 7, d = Math.random() < .5 ? -1 : 1;
+      const el = document.createElement('i');
+      el.className = 'crumb';
+      el.style.cssText = `left:${(g.x + g.w * (.2 + Math.random() * .6)) * u}px;top:${base * u}px;width:${s * u}px;height:${s * .78 * u}px;background:${CRUMB_COLORS[i % CRUMB_COLORS.length]}`;
+      fx.appendChild(el);
+      const dx = d * (50 + Math.random() * 190) * u, up = (35 + Math.random() * 120) * u, spin = d * (180 + Math.random() * 360);
+      el.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1, easing: 'cubic-bezier(.2,.7,.4,1)' },
+        { transform: `translate(${dx * .55}px, ${-up}px) rotate(${spin / 2}deg)`, opacity: 1, offset: .42, easing: 'cubic-bezier(.5,0,.9,.6)' },
+        { transform: `translate(${dx}px, ${up * .3}px) rotate(${spin}deg)`, opacity: 0 },
+      ], { duration: 750 + Math.random() * 450 }).finished.then(() => el.remove(), () => el.remove());
+    }
+  }
+
+  function wrap(p, dir) {
+    const el = prodEl[p], sh = shEl[p], dx = dir * 520 * U();
+    el.style.zIndex = 1;
+    const opt = { duration: 430, easing: 'cubic-bezier(.55,0,.8,.3)', fill: 'forwards' };
+    const a1 = el.animate([{ transform: 'none', opacity: 1 }, { transform: `translateX(${dx}px) scale(.88)`, opacity: 0 }], opt);
+    const s1 = sh.animate([{ opacity: 1 }, { opacity: 0 }], opt);
+    el._wrap = [a1, s1];
+    a1.finished.then(() => {
+      el._wrap = null;
+      place(p, cur, true);
+      el.style.zIndex = el.classList.contains('is-center') ? 3 : 1;
+      const opt2 = { duration: 700, easing: 'cubic-bezier(.2,.85,.25,1)' };
+      el.animate([{ transform: `translateX(${-dx}px) scale(.88)`, opacity: 0 }, { transform: 'none', opacity: 1 }], opt2);
+      sh.animate([{ transform: `translateX(${-dx}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }], opt2);
+      a1.cancel(); s1.cancel();
+      setTimeout(() => { if (!el.classList.contains('is-center')) el.style.zIndex = 2; }, 710);
+    }).catch(() => {});
+  }
+  function cancelWraps() {
+    for (const p in prodEl) {
+      const el = prodEl[p];
+      if (el._wrap) { el._wrap.forEach(a => a.cancel()); el._wrap = null; place(p, cur, true); }
+    }
+  }
+
+  /* ── Moving between artboards ── */
+  let cur = Math.min(2, Math.max(0, (parseInt(params.get('v'), 10) || 1) - 1));
+  let busy = false, queued = null, spinAngle = 0;
+
+  function go(ni, dir) {
+    ni = ((ni % 3) + 3) % 3;
+    if (ni === cur) return;
+    if (busy) { queued = [ni, dir]; return; }
+    busy = true;
+    cancelWraps();
+    $$('.tilt').forEach(t => { t.style.transform = ''; });
+    const prev = cur;
+    if (dir == null) dir = ((ni - prev + 3) % 3) === 1 ? 1 : -1;
+    cur = ni;
+    syncControls(dir);
+    waveGlide(dir);
+    showWord(ni, dir);
+    setHeadline(ni, dir);
+    setDoodles(ni, true);
+    hero.dispatchEvent(new Event('herochange'));
+    if (!CALM) { spinAngle += dir * 150; stickerSpin.style.rotate = spinAngle + 'deg'; }
+    garnishOut(prev, dir);
+    for (const p in prodEl) {
+      const s0 = slotOf(prev, p), s1 = slotOf(ni, p);
+      if (Math.abs(s1 - s0) === 2 && !CALM) wrap(p, s0 === 2 ? 1 : -1);
+      else place(p, ni, false);
+    }
+    setTimeout(() => smash(ORDER[ni][1]), 860);
+    garnishIn(ni, CALM ? 0 : 440, dir);
+    setTimeout(() => { busy = false; if (queued) { const q = queued; queued = null; go(q[0], q[1]); } }, CALM ? 300 : 1050);
+    restartTimer();
+  }
+
+  /* ── Controls ── */
+  const controls = $$('[data-go]');
+  function syncControls() {
+    controls.forEach(b => {
+      const on = +b.dataset.go === cur;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-current', on ? 'true' : 'false');
+    });
+    const bar = $('.sw-card.is-active .sw-bar span');
+    if (bar) { bar.style.animation = 'none'; bar.offsetWidth; bar.style.animation = ''; }
+  }
+  controls.forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+  for (const p in prodEl) {
+    prodEl[p].addEventListener('click', () => {
+      const s = slotOf(cur, p);
+      if (s === 0) go(cur + 1, 1);
+      else if (s === 2) go(cur - 1, -1);
+    });
+  }
+  addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input,textarea,select')) return;
+    if (!inView || !running) return;
+    if (e.key === 'ArrowRight') go(cur + 1, 1);
+    else if (e.key === 'ArrowLeft') go(cur - 1, -1);
+    else if (e.key === '1' || e.key === '2' || e.key === '3') go(+e.key - 1);
+  });
+  let sx = 0, sy = 0, st = 0;
+  hero.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') { sx = e.clientX; sy = e.clientY; st = 1; } }, { passive: true });
+  hero.addEventListener('pointerup', e => {
+    if (!st) return; st = 0;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) go(cur + (dx > 0 ? 1 : -1), dx > 0 ? 1 : -1);
+  }, { passive: true });
+
+  /* ── Navigation ── */
+  const nav = $('#nav'), burger = $('#burger'), ink = $('#navInk'), islL = $('#navL'), megaItem = $('#megaItem');
+  function inkTo(el) {
+    const n = islL.getBoundingClientRect(), r = el.getBoundingClientRect();
+    const fresh = ink.style.opacity !== '1';
+    if (fresh) ink.style.transition = 'none';
+    ink.style.width = r.width + 'px';
+    ink.style.height = r.height + 'px';
+    ink.style.transform = `translate(${r.left - n.left}px, ${r.top - n.top}px)`;
+    if (fresh) { ink.offsetWidth; ink.style.transition = ''; }
+    ink.style.opacity = 1;
+  }
+  $$('.nav-l .lnk').forEach(l => { l.addEventListener('pointerenter', () => inkTo(l)); l.addEventListener('focus', () => inkTo(l)); l.addEventListener('blur', () => { ink.style.opacity = 0; }); });
+  $('.nav-l').addEventListener('pointerleave', () => { ink.style.opacity = 0; });
+  const megaLink = megaItem.querySelector('.lnk');
+  const setMega = open => megaLink.setAttribute('aria-expanded', open ? 'true' : 'false');
+  megaItem.addEventListener('pointerenter', () => setMega(true));
+  megaItem.addEventListener('pointerleave', () => setMega(false));
+  megaItem.addEventListener('focusin', () => setMega(true));
+  megaItem.addEventListener('focusout', e => { if (!megaItem.contains(e.relatedTarget)) setMega(false); });
+  /* ── Search mega panel: opens on hover or click, filters the picks as you type ── */
+  const sItem = $('#searchItem'), sBtn = $('#searchBtn'), sInput = $('#sInput'), sEmpty = $('#sEmpty'), sCount = $('#sCount');
+  const sRes = $$('#sRes .sr'), sTags = $$('.sm-tags button');
+  function runSearch() {
+    const q = sInput.value.trim().toLowerCase(), words = q.split(/\s+/).filter(Boolean);
+    let n = 0;
+    sRes.forEach(r => {
+      const hay = r.dataset.k + ' ' + r.textContent.toLowerCase();
+      const hit = words.every(w => hay.includes(w));
+      r.hidden = !hit;
+      if (hit) n++;
+    });
+    sEmpty.hidden = n > 0;
+    sCount.textContent = !q ? 'Top picks' : n ? `${n} result${n > 1 ? 's' : ''}` : 'No results';
+    sTags.forEach(t => t.classList.toggle('is-on', !!q && t.textContent.toLowerCase() === q));
+  }
+  const setSearch = open => sBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  function closeSearch() { sItem.classList.remove('is-open'); setSearch(false); }
+  sInput.addEventListener('input', runSearch);
+  sTags.forEach(t => t.addEventListener('click', () => { sInput.value = t.textContent; runSearch(); sInput.focus(); }));
+  sBtn.addEventListener('click', () => { sItem.classList.add('is-open'); setSearch(true); sInput.focus(); });
+  sItem.addEventListener('pointerenter', () => setSearch(true));
+  sItem.addEventListener('pointerleave', () => { if (!sItem.contains(document.activeElement)) setSearch(false); });
+  sItem.addEventListener('focusin', () => setSearch(true));
+  sItem.addEventListener('focusout', e => { if (!sItem.contains(e.relatedTarget)) closeSearch(); });
+  sItem.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    sInput.value = ''; runSearch(); closeSearch();
+    if (sItem.contains(document.activeElement)) document.activeElement.blur();
+  });
+  burger.addEventListener('click', () => {
+    const open = nav.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+
+  /* ── Autoplay ── */
+  let timer = 0, remain = AUTO_MS, tStart = 0, running = false, inView = true;
+  const pause = { hover: false, hidden: false, offscreen: false, user: false };
+  const isPaused = () => pause.hover || pause.hidden || pause.offscreen || pause.user;
+  function schedule() {
+    clearTimeout(timer); timer = 0;
+    if (!running || CALM || isPaused()) return;
+    tStart = performance.now();
+    timer = setTimeout(() => { timer = 0; go(cur + 1, 1); }, remain);
+  }
+  function setPause(key, val) {
+    if (pause[key] === val) return;
+    const was = isPaused();
+    pause[key] = val;
+    const now = isPaused();
+    hero.classList.toggle('is-paused', now);
+    hero.classList.toggle('is-user-paused', pause.user);
+    if (now && !was && timer) { clearTimeout(timer); timer = 0; remain = Math.max(400, remain - (performance.now() - tStart)); }
+    if (!now && was) schedule();
+  }
+  function restartTimer() { remain = AUTO_MS; schedule(); }
+  $$('.prod, #strip, #megaItem, #searchItem').forEach(el => {
+    el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') setPause('hover', true); });
+    el.addEventListener('pointerleave', () => setPause('hover', false));
+  });
+  document.addEventListener('visibilitychange', () => { setPause('hidden', document.hidden); wakeWave(); });
+  new IntersectionObserver(([en]) => { inView = en.isIntersecting; setPause('offscreen', !inView); wakeWave(); }, { threshold: .35 }).observe(hero);
+
+  /* ── The cream band ──
+     A balanced, designed curve: the side products ride on two soft crests, the hero sits
+     in the cradle between them with a gentle rise behind it, and both halves mirror each
+     other so neither side outweighs the other. It never travels sideways like a wave; it
+     answers the products vertically. As they lift off and travel it rises a little, leans
+     the way they're going and its curves swell; when the new hero lands with the smash it
+     dips under the impact and springs back once or twice before settling. The peach layer
+     behind follows a beat later. */
+  const waveFront = $('#wave-fill'), waveGrain = $('#wave-grain'), waveBack = $('#wave-back');
+  const STEP = 8, LAND = 860, SETTLE = 1800, MEAN = 664, EDGE = 652;
+  // the resting curve (absolute cubic segments, mirrored about the centre), read as y(x)
+  const SEGS = (() => {
+    const pts = [[80, 652, 132, 612, 214, 612], [322, 612, 424, 712, 560, 714], [680, 716, 742, 690, 836, 690],
+      [930, 690, 992, 716, 1112, 714], [1248, 712, 1350, 612, 1458, 612], [1540, 612, 1592, 652, 1672, 652]];
+    let p = [0, EDGE];
+    return pts.map(c => { const s = [p[0], p[1], ...c]; p = [c[4], c[5]]; return s; });
+  })();
+  const baseCache = new Map();
+  function baseY(x) {
+    if (x <= 0 || x >= 1672) return EDGE;
+    let y = baseCache.get(x);
+    if (y !== undefined) return y;
+    const s = SEGS.find(g => x <= g[6]);
+    const bez = (t, a, b, c, d) => { const m = 1 - t; return m * m * m * a + 3 * m * m * t * b + 3 * m * t * t * c + t * t * t * d; };
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (bez(mid, s[0], s[2], s[4], s[6]) < x) lo = mid; else hi = mid; }
+    y = bez((lo + hi) / 2, s[1], s[3], s[5], s[7]);
+    baseCache.set(x, y);
+    return y;
+  }
+  const moves = [];   // the last couple of product changes: { t0, dir }
+  function moveOffset(m, x, t, dev) {
+    if (t <= 0 || t > SETTLE) return 0;
+    const nx = (x - 836) / 836;
+    if (t < LAND) {
+      const s = Math.sin(Math.PI * t / LAND);
+      return -24 * s + m.dir * 16 * s * nx + dev * .22 * s;   // rises with the products, leans their way, curves swell
+    }
+    const u = t - LAND, w = Math.exp(-u / 260) * Math.sin(2 * Math.PI * u / 520), bell = Math.exp(-nx * nx * 3);
+    return 26 * w * (.4 + .6 * bell) + dev * .16 * w;        // the landing: a soft dip, one spring back, settle
+  }
+  let riseT0 = -1, waveRaf = 0, xMin = -40, xMax = 1712;
+  function measureWave() {
+    const u = U(), bleedU = u > 0 ? Math.max(0, stage.offsetLeft / u) : 0;   // a 0-wide (hidden) page has no bleed
+    xMin = Math.floor((-bleedU - 40) / STEP) * STEP;
+    xMax = 1672 + Math.ceil((bleedU + 40) / STEP) * STEP;
+  }
+  function waveY(x, now, back) {
+    const lag = back ? 110 : 0;
+    const b = baseY(x);
+    let y = back ? b - 14 + (b - MEAN) * .14 : b;   // the peach layer: a touch higher and fuller, showing evenly on both sides
+    if (!CALM) {
+      y += 2.5 * Math.sin(now / 1000 * 1.1 + (back ? 1.7 : 0));        // barely-there breathing at rest
+      for (const m of moves) y += moveOffset(m, x, now - m.t0 - lag, b - MEAN) * (back ? .8 : 1);
+    }
+    if (riseT0 >= 0) { const t = Math.min(1, Math.max(0, (now - riseT0 - lag) / 1300)); y += 320 * Math.pow(1 - t, 3); }
+    return y;
+  }
+  function wavePath(now, back) {
+    let px = xMin, py = waveY(px, now, back);
+    let d = `M${xMin - 4000} ${py.toFixed(1)}L${px} ${py.toFixed(1)}`;
+    for (let x = xMin + STEP; x <= xMax; x += STEP) {
+      const y = waveY(x, now, back);
+      d += `Q${px} ${py.toFixed(1)} ${(px + x) / 2} ${((py + y) / 2).toFixed(1)}`;
+      px = x; py = y;
+    }
+    return d + `L${px} ${py.toFixed(1)}L${xMax + 4000} ${py.toFixed(1)}V4000H${xMin - 4000}Z`;
+  }
+  function paintWave(now) {
+    const front = wavePath(now, false);
+    waveFront.setAttribute('d', front); waveGrain.setAttribute('d', front);
+    waveBack.setAttribute('d', wavePath(now, true));
+  }
+  function waveFrame(now) {
+    waveRaf = 0;
+    if (riseT0 >= 0 && now - riseT0 > 2800) riseT0 = -1;
+    const lively = riseT0 >= 0 || moves.some(m => now - m.t0 < SETTLE + 200);
+    if (!(inView && !document.hidden) && !lively) return;
+    paintWave(now);
+    waveRaf = requestAnimationFrame(waveFrame);
+  }
+  function wakeWave() { if (!CALM && !waveRaf && running) waveRaf = requestAnimationFrame(waveFrame); }
+  function waveGlide(dir) {
+    if (CALM) return;   // the band rests in the same shape under every hero, so a calm page needs no motion
+    moves.push({ t0: performance.now(), dir });
+    if (moves.length > 3) moves.shift();   // an earlier bounce keeps fading out underneath, so nothing jumps
+    if (!waveRaf) waveRaf = requestAnimationFrame(waveFrame);
+  }
+  function waveRise() { if (CALM) return; riseT0 = performance.now(); if (!waveRaf) waveRaf = requestAnimationFrame(waveFrame); }
+  measureWave();
+  paintWave(performance.now());
+  let rsT = 0;
+  addEventListener('resize', () => { cancelAnimationFrame(rsT); rsT = requestAnimationFrame(() => { measureWave(); paintWave(performance.now()); fitAll(); }); });
+
+  /* ── Embers rising from behind the hero product ── */
+  const embers = $('#embers');
+  for (let i = 0; i < 16; i++) {
+    const el = document.createElement('i');
+    el.className = 'ember';
+    const x = 600 + ((i * 97) % 480), y = 600 + ((i * 53) % 200);
+    el.style.cssText = `left:${(x / 16.72).toFixed(2)}%;top:${(y / 9.41).toFixed(2)}%;--s:${(5 + (i * 7) % 6).toFixed(0)};--t:${(3.6 + (i * .37) % 2.8).toFixed(2)}s;--dl:${(-((i * .71) % 5)).toFixed(2)}s;--dx:${(i % 2 ? 1 : -1) * (18 + (i * 11) % 46)}`;
+    embers.appendChild(el);
+  }
+
+  /* ── Sesame seeds drifting in the red, clear of the lettering ── */
+  const seeds = $('#seeds');
+  [[95, 300], [160, 440], [300, 120], [60, 560], [400, 410], [560, 140], [1110, 150], [1290, 330], [1270, 415], [1560, 120], [1625, 300], [1600, 420]]
+    .forEach(([x, y], i) => {
+      const el = document.createElement('i');
+      el.className = 'seed';
+      el.style.cssText = `left:${(x / 16.72).toFixed(2)}%;top:${(y / 9.41).toFixed(2)}%;--s:${7 + (i * 3) % 6};--o:${(.32 + (i % 4) * .1).toFixed(2)};--r:${(i * 47) % 180}deg;--t:${(9 + (i * 1.7) % 7).toFixed(1)}s;--dl:${(-((i * 1.3) % 8)).toFixed(1)}s;--dx:${(i % 2 ? 1 : -1) * (14 + (i * 5) % 22)}`;
+      seeds.appendChild(el);
+    });
+
+  /* ── Custom cursor over the products (mouse only) ──
+     hero product → spinning "Order now" seal · side products → cream arrow toward that product */
+  if (!CALM && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const cur = $('#cur'), body = $('.cur-body', cur), hin = $('.hero-in');
+    hero.classList.add('has-cursor');
+    let bx = 0, by = 0, tx = 0, ty = 0, braf = 0, mode = '', last = null;
+    const modeAt = el => {
+      const p = el && el.closest && el.closest('.prod');
+      if (!p) return '';
+      const s = +p.dataset.slot;
+      return s === 1 ? 'order' : s === 0 ? 'prev' : 'next';
+    };
+    function setMode(m) {
+      if (m === mode) return;
+      if (!mode && m) { bx = tx; by = ty; }   // appear right under the pointer, not slide in from the last spot
+      mode = m;
+      cur.classList.toggle('on', !!m);
+      cur.classList.toggle('is-side', m === 'prev' || m === 'next');
+      cur.style.setProperty('--ar', m === 'prev' ? '180deg' : m === 'next' ? '0deg' : '-45deg');
+      if (!m) { cur.classList.remove('is-down'); hero.classList.remove('is-pressing'); }
+    }
+    const step = () => {
+      const nx = bx + (tx - bx) * .2, ny = by + (ty - by) * .2;
+      const vx = nx - bx, vy = ny - by;
+      bx = nx; by = ny;
+      cur.style.setProperty('--px', bx.toFixed(1) + 'px'); cur.style.setProperty('--py', by.toFixed(1) + 'px');
+      cur.style.setProperty('--ox', (tx - bx).toFixed(1) + 'px'); cur.style.setProperty('--oy', (ty - by).toFixed(1) + 'px');
+      // stretch along the direction of travel, a touch of jelly
+      const sp = Math.min(.18, Math.hypot(vx, vy) * .011), a = Math.atan2(vy, vx) * 180 / Math.PI;
+      body.style.transform = sp > .005 ? `rotate(${a.toFixed(1)}deg) scale(${(1 + sp).toFixed(3)}, ${(1 - sp * .7).toFixed(3)}) rotate(${(-a).toFixed(1)}deg)` : '';
+      braf = (Math.abs(tx - bx) > .3 || Math.abs(ty - by) > .3) ? requestAnimationFrame(step) : 0;
+      if (!braf) { body.style.transform = ''; cur.style.setProperty('--ox', '0px'); cur.style.setProperty('--oy', '0px'); }
+    };
+    hero.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      const r = hin.getBoundingClientRect();
+      tx = e.clientX - r.left; ty = e.clientY - r.top; last = [e.clientX, e.clientY];
+      setMode(modeAt(e.target));
+      if (!braf) braf = requestAnimationFrame(step);
+    });
+    hero.addEventListener('pointerleave', () => { last = null; setMode(''); });
+    hero.addEventListener('pointerdown', e => {
+      if (!mode || e.button !== 0) return;
+      cur.classList.add('is-down');
+      if (mode === 'order') hero.classList.add('is-pressing');
+    });
+    addEventListener('pointerup', () => {
+      hero.classList.remove('is-pressing');
+      if (!cur.classList.contains('is-down')) return;
+      cur.classList.remove('is-down');
+      const rp = document.createElement('i');
+      rp.className = 'cur-ripple';
+      cur.appendChild(rp);
+      rp.animate([{ transform: `scale(${mode === 'order' ? .55 : .3})`, opacity: .85 }, { transform: `scale(${mode === 'order' ? 1.7 : .95})`, opacity: 0 }], { duration: 620, easing: 'cubic-bezier(.2,.7,.3,1)' })
+        .finished.then(() => rp.remove(), () => rp.remove());
+    });
+    // when the products slide under a resting pointer, re-read what is beneath it
+    const refresh = () => { if (last) setMode(modeAt(document.elementFromPoint(last[0], last[1]))); };
+    hero.addEventListener('herochange', () => { setTimeout(refresh, 60); setTimeout(refresh, 1000); });
+    // 3D lean of the hero product toward the pointer
+    let tilted = null;
+    hero.addEventListener('pointermove', e => {
+      const pc = e.target.closest && e.target.closest('.prod.is-center');
+      if (pc) {
+        const r = pc.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width * 2 - 1, ny = (e.clientY - r.top) / r.height * 2 - 1;
+        tilted = pc.querySelector('.tilt');
+        tilted.style.transform = `perspective(${(r.width * 2.4).toFixed(0)}px) rotateY(${(nx * 9).toFixed(2)}deg) rotateX(${(-ny * 7).toFixed(2)}deg) scale(1.025)`;
+      } else if (tilted) { tilted.style.transform = ''; tilted = null; }
+    });
+    hero.addEventListener('pointerleave', () => { if (tilted) { tilted.style.transform = ''; tilted = null; } });
+  }
+
+  /* ── Soft pointer parallax ── */
+  if (!CALM && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let tx = 0, ty = 0, mx = 0, my = 0, raf = 0;
+    const tick = () => {
+      mx += (tx - mx) * .06; my += (ty - my) * .06;
+      hero.style.setProperty('--mx', mx.toFixed(4));
+      hero.style.setProperty('--my', my.toFixed(4));
+      raf = (Math.abs(tx - mx) > .0005 || Math.abs(ty - my) > .0005) ? requestAnimationFrame(tick) : 0;
+    };
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+      ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    hero.addEventListener('pointerleave', () => { tx = ty = 0; if (!raf) raf = requestAnimationFrame(tick); });
+  }
+
+  /* ── Hero entrance ── */
+  for (const p in prodEl) place(p, cur, true);
+  syncControls(0);
+  showWord(cur, 1, true);
+  setHeadline(cur, 1, 'instant');
+
+  function intro() {
+    hero.classList.remove('is-loading');
+    hero.classList.add('is-in');
+    setDoodles(cur, true);
+    if (CALM) { garnishIn(cur, 0); running = true; return; }
+    setHeadline(cur, 1, 'intro');
+    waveRise();
+    const u = U();
+    for (const p in prodEl) {
+      const slot = slotOf(cur, p), el = prodEl[p];
+      if (slot === 1) {
+        el.animate([{ transform: `translateY(${-230 * u}px) scale(.9)`, opacity: 0 }, { opacity: 1, offset: .35 }, { transform: 'none', opacity: 1 }],
+          { duration: 700, delay: 560, easing: 'cubic-bezier(.5,0,.9,.55)', fill: 'backwards' });
+        setTimeout(() => smash(p), 560 + 690);
+        shEl[p].animate([{ transform: 'scale(.35)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 760, delay: 620, easing: 'cubic-bezier(.3,.6,.3,1)', fill: 'backwards' });
+      } else {
+        const side = slot === 0 ? -1 : 1;
+        const opt = { duration: 1050, delay: 820, easing: 'cubic-bezier(.16,.9,.25,1)', fill: 'backwards' };
+        el.animate([{ transform: `translateX(${side * 320 * u}px) rotate(${side * 14}deg)`, opacity: 0 }, { transform: 'none', opacity: 1 }], opt);
+        shEl[p].animate([{ transform: `translateX(${side * 320 * u}px) scale(.6)`, opacity: 0 }, { transform: 'none', opacity: 1 }], opt);
+      }
+    }
+    garnishIn(cur, 1180, 1);
+    setTimeout(() => { running = true; syncControls(0); restartTimer(); wakeWave(); }, 1900);
+  }
+
+  /* ── Preloader ── */
+  const pre = $('#pre'), preLogo = $('#preLogo');
+  const imgs = [...$$('.prod img'), ...$$('#garnish img'), ...$$('#fg img')];
+  let loaded = 0;
+  const bar = $('.pl-bar', preLogo);
+  const ready = Promise.race([
+    Promise.all([...imgs.map(i => (i.decode ? i.decode() : Promise.resolve()).catch(() => {}).then(() => { loaded++; })), document.fonts ? document.fonts.ready : null]),
+    new Promise(r => setTimeout(r, 6000)),
+  ]).then(() => { loaded = imgs.length; });
+
+  /* The smash: a red patty ball drops in and bounces, a burger press comes down and
+     slams it flat (camera shake, flash, gold sparks, crumbs, "SMASH!"), the press lifts,
+     and the flattened red patty flies up and becomes the logo's underline swoosh while
+     the letters spring out of it. The counter under the logo is the real loading
+     progress; once everything is ready a shine runs across the logo, it stamps down and
+     flies into the nav while the cream curtain pours away. */
+  function preloader() {
+    if (CALM) { pre.remove(); preLogo.remove(); return ready; }
+    document.documentElement.classList.add('is-preloading');
+    const svg = $('svg', preLogo), R = $('.pl-ring', preLogo), mark = $('.pl-mark', preLogo);
+    const sm = $('#smash'), ball = $('.sm-ball', sm), press = $('.sm-press', sm), shadow = $('.sm-shadow', sm), fxL = $('#smFx');
+    const vh = innerHeight, B = Math.round(Math.max(60, Math.min(104, Math.min(innerWidth, vh) * .13)));
+    sm.style.setProperty('--b', B + 'px');
+    sm.classList.add('go');
+    const griddle = $('.sm-griddle', sm), heat = $('.sm-heat', sm), burst = $('.sm-burst', sm), trail = $('.sm-trail', sm);
+    const glowEl = $('.sm-glow', sm);
+    const bit = cls => { const el = document.createElement('i'); el.className = cls; fxL.appendChild(el); return el; };
+    const gone = (el, a) => a.finished.then(() => el.remove(), () => el.remove());
+    const TOUCH = 980 + .5 * 1060, FLAT = 980 + .55 * 1060;
+
+    // the wordmark is split into pieces (J · S · "mas" · h · dot) so they can pop out of the patty one by one
+    const NS = 'http://www.w3.org/2000/svg';
+    const subs = $('#js-word').getAttribute('d').split(/(?=M)/).filter(s => s.trim());
+    let pieces = null;
+    if (subs.length === 5) {
+      const node = (tag, attr, val) => { const n = document.createElementNS(NS, tag); n.setAttribute(attr, val); return n; };
+      const piece = (cls, child) => { const g = node('g', 'class', 'pl-pc ' + cls); g.appendChild(child); mark.appendChild(g); return g; };
+      mark.textContent = '';
+      pieces = [
+        piece('pl-j', node('use', 'href', '#js-j')),
+        piece('pl-s', node('path', 'd', subs[0])),
+        piece('pl-mas', node('path', 'd', subs[1] + subs[2] + subs[3])),
+        piece('pl-h', node('path', 'd', subs[4])),
+        piece('pl-dot', node('use', 'href', '#js-dot')),
+      ];
+    }
+
+    // 0 · the hot griddle slides in, heat starts rising, a warm glow builds underneath
+    griddle.animate([{ transform: 'scaleX(0)', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+    heat.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 300, fill: 'forwards' });
+    glowEl.animate([{ opacity: 0, transform: 'scaleX(.35)' }, { opacity: .7, transform: 'none' }], { duration: 1100, delay: 150, easing: 'cubic-bezier(.3,.6,.3,1)', fill: 'forwards' });
+    // grease spitting off the griddle, the whole time the patty sits on it
+    const spit = t => setTimeout(() => {
+      const s = 2.5 + Math.random() * 3.5, side = Math.random() < .5 ? -1 : 1;
+      const x = side * B * (.62 + Math.random() * 1.7), h = B * (.08 + Math.random() * .26), drift = side * B * (.05 + Math.random() * .25);
+      const el = bit('sm-drop');
+      el.style.cssText = `width:${s}px;height:${s}px;margin:${-s}px 0 0 ${-s / 2}px`;
+      gone(el, el.animate([
+        { transform: `translate(${x}px, 0)`, opacity: 1, easing: 'cubic-bezier(.2,.7,.4,1)' },
+        { transform: `translate(${x + drift * .5}px, ${-h}px)`, offset: .45, easing: 'cubic-bezier(.5,0,.9,.6)' },
+        { transform: `translate(${x + drift}px, 0)`, opacity: .15 },
+      ], { duration: 340 + Math.random() * 220 }));
+    }, t);
+    for (let t = 420; t < FLAT + 120; t += 60 + Math.random() * 90) spit(t);
+    // jagged starburst for the impact
+    $('#smBurst').setAttribute('points', Array.from({ length: 28 }, (_, i) => {
+      const a = (i / 28) * Math.PI * 2 - Math.PI / 2, r = i % 2 ? 54 + (i % 4) * 4 : 100 - (i % 3) * 7;
+      return `${(Math.cos(a) * r).toFixed(1)},${(Math.sin(a) * r * .62).toFixed(1)}`;
+    }).join(' '));
+    const word = $('.sm-word', sm), ghost = $('.pre-ghost', pre);
+
+    // 1 · the patty ball drops and bounces (squash on every landing)
+    const bounce = { duration: 1150, delay: 120, fill: 'both' };
+    const fall = 'cubic-bezier(.55,0,1,.45)', rise = 'cubic-bezier(0,.55,.45,1)';
+    ball.animate([
+      { offset: 0,   transform: `translateY(${-vh * .66}px) scale(.9,1.12)`, easing: fall },
+      { offset: .30, transform: 'translateY(0) scale(1.3,.7)', easing: rise },
+      { offset: .48, transform: `translateY(${-B * .95}px) scale(.94,1.08)`, easing: fall },
+      { offset: .66, transform: 'translateY(0) scale(1.17,.83)', easing: rise },
+      { offset: .78, transform: `translateY(${-B * .26}px) scale(.98,1.03)`, easing: fall },
+      { offset: .88, transform: 'translateY(0) scale(1.06,.94)', easing: 'ease-out' },
+      { offset: 1,   transform: 'translateY(0) scale(1,1)' },
+    ], bounce);
+    shadow.animate([
+      { offset: 0, transform: 'scale(.2)', opacity: .15, easing: fall },
+      { offset: .30, transform: 'scale(1.15,1)', opacity: 1, easing: rise },
+      { offset: .48, transform: 'scale(.7)', opacity: .55, easing: fall },
+      { offset: .66, transform: 'scale(1.08,1)', opacity: 1, easing: rise },
+      { offset: .78, transform: 'scale(.92)', opacity: .85, easing: fall },
+      { offset: 1, transform: 'scale(1)', opacity: 1 },
+    ], bounce);
+
+    // 2 · the press comes down, winds up, and slams
+    const Y = y => `translateY(${y}px)`;
+    press.animate([
+      { offset: 0,   transform: Y(-vh * 1.15), easing: 'cubic-bezier(.2,.8,.3,1)' },
+      { offset: .33, transform: Y(-B - 150), easing: 'ease-in-out' },
+      { offset: .43, transform: Y(-B - 195), easing: 'cubic-bezier(.75,0,1,.6)' },
+      { offset: .50, transform: Y(-B), easing: 'linear' },
+      { offset: .55, transform: Y(-B * .25), easing: 'ease-out' },
+      { offset: .62, transform: Y(-B * .3), easing: 'ease-in-out' },
+      { offset: .72, transform: Y(-B * .28), easing: 'cubic-bezier(.35,0,.55,1)' },
+      { offset: 1,   transform: Y(-vh * 1.15) },
+    ], { duration: 1060, delay: 980, fill: 'both' });
+    // motion trails: once as the press drops in, once on the slam
+    trail.animate([{ opacity: 0 }, { opacity: .85, offset: .3 }, { opacity: 0 }], { duration: 320, delay: 980 });
+    trail.animate([{ opacity: 0 }, { opacity: 1, offset: .55 }, { opacity: 0 }], { duration: 170, delay: TOUCH - 110 });
+    ball.animate([
+      { transform: 'scale(1,1)' }, { transform: 'scale(3.3,.24)', offset: .6, easing: 'ease-out' }, { transform: 'scale(3.1,.28)' },
+    ], { duration: FLAT - TOUCH + 40, delay: TOUCH, fill: 'forwards' });
+    shadow.animate([{ transform: 'scale(1)' }, { transform: 'scale(2.8,1.3)' }], { duration: FLAT - TOUCH, delay: TOUCH, fill: 'forwards' });
+
+    // 3 · impact: camera punch + shake, the glow flares
+    setTimeout(() => {
+      sm.animate([
+        { transform: 'none' }, { transform: 'translate(-7px,5px) scale(1.05)', offset: .14 }, { transform: 'translate(6px,-4px) scale(1.022)', offset: .34 },
+        { transform: 'translate(-4px,3px) scale(1.008)', offset: .55 }, { transform: 'translate(2px,-1px)', offset: .75 }, { transform: 'none' },
+      ], { duration: 400, easing: 'ease-out' });
+      glowEl.animate([{ opacity: .7, transform: 'none' }, { opacity: 1, transform: 'scale(1.3,1.5)', offset: .18 }, { opacity: .55, transform: 'none' }], { duration: 760, easing: 'ease-out', fill: 'forwards' });
+      burst.animate([
+        { transform: 'scale(.2) rotate(-14deg)', opacity: 1 },
+        { transform: 'scale(1) rotate(0deg)', opacity: .95, offset: .25 },
+        { transform: 'scale(1.12) rotate(4deg)', opacity: 0 },
+      ], { duration: 440, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      heat.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
+      // the big running "JUST SMASH" behind has done its job: it clears so the logo gets a clean stage
+      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, delay: 60, easing: 'ease-out', fill: 'forwards' });
+      // the comic sound effect pops off to the side, and is gone before the logo arrives
+      word.animate([
+        { opacity: 0, transform: 'scale(.2) rotate(-28deg)' },
+        { opacity: 1, transform: 'scale(1.22) rotate(-4deg)', offset: .2 },
+        { opacity: 1, transform: 'scale(.96) rotate(-9deg)', offset: .38 },
+        { opacity: 1, transform: 'scale(1) rotate(-8deg)', offset: .62 },
+        { opacity: 0, transform: 'scale(.7) rotate(-8deg) translateY(-6px)' },
+      ], { duration: 430, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      let el = bit('sm-flash');
+      gone(el, el.animate([{ transform: 'scale(.3)', opacity: 1 }, { transform: 'scale(1.35)', opacity: 0 }], { duration: 460, easing: 'cubic-bezier(.2,.7,.3,1)' }));
+      // a short puff of steam off the freshly smashed patty
+      for (let i = 0; i < 6; i++) {
+        el = bit('sm-steam');
+        const x0 = (i % 2 ? 1 : -1) * B * (.35 + (i >> 1) * .42), drift = (i % 2 ? 1 : -1) * B * (.1 + Math.random() * .25);
+        gone(el, el.animate([
+          { transform: `translate(${x0}px, ${-B * .1}px) scale(.45)`, opacity: 0 },
+          { opacity: .8, offset: .3 },
+          { transform: `translate(${x0 + drift}px, ${-B * (.9 + Math.random() * .4)}px) scale(1.5)`, opacity: 0 },
+        ], { duration: 420 + Math.random() * 120, delay: 50 + i * 25, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'backwards' }));
+      }
+      el = bit('sm-ring');
+      gone(el, el.animate([{ transform: 'scale(.45)', opacity: .9 }, { transform: 'scale(2.4)', opacity: 0 }], { duration: 560, easing: 'cubic-bezier(.2,.7,.3,1)' }));
+      for (let i = 0; i < 13; i++) {
+        const a = -176 + i * (172 / 12) + (Math.random() - .5) * 6;
+        el = bit('sm-ray');
+        gone(el, el.animate([
+          { transform: `rotate(${a}deg) translateX(${B * .8}px) scaleX(0)`, opacity: 1 },
+          { transform: `rotate(${a}deg) translateX(${B * 1.45}px) scaleX(1)`, opacity: 1, offset: .38 },
+          { transform: `rotate(${a}deg) translateX(${B * 2.5}px) scaleX(.15)`, opacity: 0 },
+        ], { duration: 460, easing: 'cubic-bezier(.2,.7,.3,1)' }));
+      }
+      const COLS = ['#8f0408', '#b10d15', '#c97020', '#efbc64', '#6c0206', '#e0952f'];
+      for (let i = 0; i < 24; i++) {
+        el = bit('sm-bit');
+        const s = 4 + Math.random() * 8, d = i % 2 ? 1 : -1;
+        el.style.cssText = `width:${s}px;height:${s * .8}px;margin:${-s / 2}px 0 0 ${-s / 2}px;background:${COLS[i % COLS.length]}`;
+        const dx = d * (B * .6 + Math.random() * B * 3.4), up = B * (.2 + Math.random() * 1.5), spin = d * (200 + Math.random() * 420);
+        gone(el, el.animate([
+          { transform: 'translate(0,0) rotate(0deg)', opacity: 1, easing: 'cubic-bezier(.2,.7,.4,1)' },
+          { transform: `translate(${dx * .55}px, ${-up}px) rotate(${spin / 2}deg)`, opacity: 1, offset: .42, easing: 'cubic-bezier(.5,0,.9,.6)' },
+          { transform: `translate(${dx}px, ${Math.random() * 6}px) rotate(${spin}deg)`, opacity: 1, offset: .8 },
+          { transform: `translate(${dx * 1.04}px, ${Math.random() * 6}px) rotate(${spin}deg)`, opacity: 0 },
+        ], { duration: 560 + Math.random() * 220 }));
+      }
+    }, FLAT);
+
+    // 3b · the griddle retracts the way it came in (and its glow goes with it) before the
+    //      patty turns into the underline, so the black bar and the red one never overlap
+    setTimeout(() => {
+      griddle.animate([{ transform: 'none', opacity: 1 }, { transform: 'scaleX(0)', opacity: 0 }], { duration: 230, easing: 'cubic-bezier(.6,0,.8,.4)', fill: 'forwards' });
+      glowEl.animate([{ opacity: .55 }, { opacity: 0 }], { duration: 230, fill: 'forwards' });
+    }, FLAT + 140);
+
+    // 4 · the letters pop out of the smashed patty one after another and land with a squash;
+    //     the dot drops on last, like the cherry on top
+    setTimeout(() => {
+      preLogo.classList.add('go');
+      const ppu = preLogo.offsetWidth / 171;
+      if (pieces) {
+        const P = { x: 85.5, y: 33.5 + (34 - B * .14) / ppu };
+        const T = [0, 75, 150, 225, 520];
+        pieces.forEach((g, i) => {
+          const b = g.getBBox(), cx = b.x + b.width / 2, cy = b.y + b.height / 2;
+          if (i === 4) {
+            g.animate([{ transform: 'translateY(-14px) scale(0)' }, { transform: 'scale(1.75)', offset: .42 }, { transform: 'scale(.8)', offset: .7 }, { transform: 'none' }],
+              { duration: 540, delay: T[i], easing: 'ease-out', fill: 'backwards' });
+            return;
+          }
+          const dx = P.x - cx, dy = P.y - cy, lift = -9 - b.height * .28, tilt = (cx < P.x ? -1 : 1) * (9 + i * 4);
+          g.animate([
+            { transform: `translate(${dx}px, ${dy}px) scale(.18, .08)`, easing: 'cubic-bezier(.15,.75,.35,1)' },
+            { transform: `translate(${(dx * .22).toFixed(2)}px, ${lift.toFixed(2)}px) rotate(${tilt}deg) scale(.95, 1.12)`, offset: .46, easing: 'cubic-bezier(.55,0,.85,.4)' },
+            { transform: 'translate(0, 0) scale(1.22, .76)', offset: .7, easing: 'cubic-bezier(.2,.8,.3,1)' },
+            { transform: 'scale(.95, 1.07)', offset: .86 },
+            { transform: 'none' },
+          ], { duration: 740, delay: T[i], fill: 'backwards' });
+        });
+      } else {
+        const sx = (B * 3.1) / (150 * ppu), sy = (B * .28) / (52 * ppu), dy = (34 - B * .14) / ppu;
+        mark.animate([
+          { transform: `translateY(${dy}px) scale(${sx}, ${sy})`, easing: 'cubic-bezier(.2,1.35,.4,1)' },
+          { transform: 'translateY(-2px) scale(1.07,1.12)', offset: .45, easing: 'ease-in-out' },
+          { transform: 'scale(.985,.97)', offset: .72, easing: 'ease-out' },
+          { transform: 'none' },
+        ], { duration: 760, fill: 'backwards' });
+      }
+      // the flattened red patty itself flies up and becomes the underline swoosh
+      ball.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 60, fill: 'forwards' });
+      {
+        const bb = bar.getBBox(), cx = bb.x + bb.width / 2, cy = bb.y + bb.height / 2;
+        const Px = 85.5, Py = 33.5 + (34 - B * .14) / ppu, sx = (B * 3.1 / ppu) / bb.width, sy = (B * .28 / ppu) / bb.height;
+        bar.animate([
+          { transform: `translate(${(Px - cx).toFixed(2)}px, ${(Py - cy).toFixed(2)}px) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`, easing: 'cubic-bezier(.2,.75,.3,1)' },
+          { transform: `translate(${((Px - cx) * .12).toFixed(2)}px, -8px) rotate(-3deg) scale(1.05, 1.6)`, offset: .48, easing: 'cubic-bezier(.5,0,.75,.4)' },
+          { transform: 'translateY(1px) scale(1.05, .66)', offset: .72, easing: 'cubic-bezier(.2,.8,.3,1)' },
+          { transform: 'scale(.99, 1.1)', offset: .86 },
+          { transform: 'none' },
+        ], { duration: 760, fill: 'backwards' });
+      }
+      shadow.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
+    }, FLAT + 380);   // once the press is clear and the griddle has gone
+
+    const minTime = new Promise(r => setTimeout(r, FLAT + 1530));
+    return Promise.all([minTime, ready]).then(() => new Promise(res => setTimeout(res, 250))).then(() => {
+      // a shine sweeps across the finished logo
+      $('.pl-shine', preLogo).animate([{ opacity: 1, transform: 'translateX(0) skewX(-20deg)' }, { opacity: 1, transform: 'translateX(235px) skewX(-20deg)' }], { duration: 640, easing: 'cubic-bezier(.45,0,.2,1)' });
+      svg.animate([{ transform: 'scale(1)' }, { transform: 'scale(.955)', offset: .35 }, { transform: 'scale(1.015)', offset: .7 }, { transform: 'scale(1)' }], { duration: 380, easing: 'ease-out' });
+      R.animate([{ transform: 'scale(1)', opacity: .8, strokeWidth: 2.2 }, { transform: 'scale(2.6)', opacity: 0, strokeWidth: .3 }], { duration: 900, easing: 'cubic-bezier(.2,.7,.3,1)' });
+      return new Promise(res => setTimeout(res, 480));
+    }).then(() => {
+      const a = preLogo.getBoundingClientRect(), b = $('#navLogo').getBoundingClientRect();
+      const s = b.width / a.width;
+      const dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+      hero.classList.add('handoff');
+      const fly = preLogo.animate([{ transform: 'none' }, { transform: `translate(${dx}px, ${dy}px) scale(${s})` }], { duration: 850, easing: 'cubic-bezier(.7,0,.2,1)', fill: 'forwards' });
+      // on the transparent nav the logo turns cream as it lands; on the white bar it stays brand red
+      const navColor = getComputedStyle($('#navLogo')).color;
+      svg.animate([{ fill: '#980c13' }, { fill: navColor }], { duration: 700, delay: 150, easing: 'ease-in-out', fill: 'forwards' });
+      pre.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(calc(-100% - 17vh))' }], { duration: 1050, delay: 100, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' })
+        .finished.then(() => { pre.remove(); document.documentElement.classList.remove('is-preloading'); });
+      fly.finished.then(() => {
+        hero.classList.remove('handoff');
+        preLogo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }).finished.then(() => preLogo.remove());
+      });
+    });
+  }
+
+  preloader().then(() => setTimeout(intro, CALM ? 30 : 60));
+})();
+</script>
+</body>
+</html>
